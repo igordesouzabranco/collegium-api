@@ -16,9 +16,13 @@
     "eslint": "^10.10.0",
     "globals": "^17.12.0",
     "nodemon": "^3.1.14",
+    "sequelize-cli": "^6.6.5",
     "sucrase": "^3.35.1"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mariadb": "^3.5.4",
+    "sequelize": "^6.37.8"
   }
 }
