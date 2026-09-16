@@ -12,7 +12,7 @@ class UserController {
 
   async index(req, res) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({ attributes: ['id', 'name', 'email'] });
       return res.json(users);
     } catch (errors) {
       return res.status(400).json({ errors: errors });
@@ -21,12 +21,12 @@ class UserController {
 
   async show(req, res) {
     try {
-      const { id } = req.params;
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(req.User.id);
+      const { id, name, email } = user.toJSON();
       if (!user) {
         return res.status(400).json({ errors: ['Usuário não encontrado'] });
       }
-      return res.json(user);
+      return res.json({ id, name, email });
     } catch (errors) {
       return res.status(400).json({ errors: errors });
     }
@@ -40,13 +40,13 @@ async update(req, res) {
       return res.status(400).json({ errors: ['Id não informado'] });
     }
 
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(req.User.id);
     if (!user) {
       return res.status(400).json({ errors: ['Usuário não encontrado'] });
     }
 
     const updatedUser = await user.update(req.body);
-    return res.json(updatedUser);
+    return res.json({ id, name: updatedUser.name, email: updatedUser.email });
   } catch (errors) {
     const messages = errors.errors
       ? errors.errors.map(e => e.message)
@@ -62,12 +62,13 @@ async update(req, res) {
       if (!id) {
         return res.status(400).json({ errors: ['Id não informado'] });
       }
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(req.User.id);
       if (!user) {
         return res.status(400).json({ errors: ['Usuário não encontrado'] });
       }
+      // eslint-disable-next-line no-unused-vars
       const deletedUser = await user.destroy();
-      return res.json(deletedUser);
+      return res.json(null);
     } catch (errors) {
       return res.status(400).json({ errors: errors.map(e => e.message) });
     }

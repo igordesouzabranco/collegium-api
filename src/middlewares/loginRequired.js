@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
-export default function loginRequired(req, res, next) {
+export default async function loginRequired(req, res, next) {
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -12,7 +13,18 @@ export default function loginRequired(req, res, next) {
   try {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     const { id, email } = decoded;
-    req.userId = id;
+
+    const user = await User.findOne({ where: {
+      id,
+      email
+    } });
+    if (!user) {
+      return res.status(400).json({ errors: ['Usuário não encontrado'] });
+    }
+
+    req.User = user;
+
+       req.userId = id;
     req.userEmail = email;
     return next();
   // eslint-disable-next-line no-unused-vars
