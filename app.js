@@ -7,6 +7,7 @@ import express from 'express';
 import homeRouter from './src/routes/home';
 import userRouter from './src/routes/user.js';
 import tokenRouter from './src/routes/token.js';
+import alunoRouter from './src/routes/aluno.js';
 
 
 
@@ -26,6 +27,7 @@ class App {
     this.app.use('/', homeRouter);
     this.app.use('/users/', userRouter);
     this.app.use('/tokens/', tokenRouter);
+    this.app.use('/alunos/', alunoRouter);
   }
 }
 
