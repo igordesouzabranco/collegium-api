@@ -1,0 +1,3921 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-09-28T14:37:19.029Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "__export_size": 86659,
+  "resources": [
+    {
+      "_type": "workspace",
+      "_id": "wrk_collegium_api",
+      "parentId": null,
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "API Gestão Escolar",
+      "description": "Roteiro de demonstração da API REST do Sistema de Gestão Escolar.\n\nComo usar:\n1. Suba a API com \"npm run dev\" (porta 3000) e aplique as migrations + seeds.\n2. Execute os 3 logins da pasta 1 e preencha tokenAdmin, tokenCoord e tokenProf no ambiente.\n3. Percorra as pastas na ordem. Alguns passos pedem para copiar o \"id\" da resposta para as variáveis *DemoId do ambiente.\n4. Os POSTs usam e-mails fixos: rodar a segunda vez dá 409 (e-mail já existe).\n\nContas: administrador john.doe@example.com / 123456; coordenador coord.teste@example.com / 123456; professor prof.rafael@example.com / 123456.",
+      "scope": "collection",
+      "metaSortKey": -2
+    },
+    {
+      "_type": "environment",
+      "_id": "env_base",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "tokenAdmin": "",
+        "tokenCoord": "",
+        "tokenProf": "",
+        "userDemoId": "",
+        "coordDemoId": "",
+        "cursoDemoId": "",
+        "disciplinaDemoId": "",
+        "turmaDemoId": "",
+        "profDemoId": "",
+        "alunoDemoId": "",
+        "avaliacaoDemoId": "",
+        "notaDemoId": "",
+        "presencaDemoId": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "tokenAdmin",
+          "tokenCoord",
+          "tokenProf",
+          "userDemoId",
+          "coordDemoId",
+          "cursoDemoId",
+          "disciplinaDemoId",
+          "turmaDemoId",
+          "profDemoId",
+          "alunoDemoId",
+          "avaliacaoDemoId",
+          "notaDemoId",
+          "presencaDemoId"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": -1
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_1__autentica__o",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "1. Autenticação",
+      "description": "Execute os 3 logins em ordem e copie o campo \"token\" de cada resposta para a variável correspondente do ambiente (tokenAdmin, tokenCoord, tokenProf).",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 1000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_001",
+      "parentId": "fld_1__autentica__o",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/tokens",
+      "name": "POST /tokens - login administrador",
+      "description": "Esperado: 200 { token, user: { id, nome, email, role } }\n\nCopie \"token\" para _.tokenAdmin.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_002",
+      "parentId": "fld_1__autentica__o",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/tokens",
+      "name": "POST /tokens - login coordenador",
+      "description": "Esperado: 200\n\nCopie \"token\" para _.tokenCoord.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"coord.teste@example.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 2000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_003",
+      "parentId": "fld_1__autentica__o",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/tokens",
+      "name": "POST /tokens - login professor",
+      "description": "Esperado: 200\n\nCopie \"token\" para _.tokenProf.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"prof.rafael@example.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 3000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_004",
+      "parentId": "fld_1__autentica__o",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/tokens",
+      "name": "POST /tokens - senha errada",
+      "description": "Esperado: 401 { errors: [\"Credenciais inválidas\"] }",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"errada\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 4000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_005",
+      "parentId": "fld_1__autentica__o",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users",
+      "name": "GET /users - sem token",
+      "description": "Esperado: 401",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 5000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_006",
+      "parentId": "fld_1__autentica__o",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users",
+      "name": "GET /users - token inválido",
+      "description": "Esperado: 401",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer tokenfalso",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 6000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_007",
+      "parentId": "fld_1__autentica__o",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/tokens",
+      "name": "POST /tokens - campos vazios",
+      "description": "Esperado: 401",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 7000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_2__users",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "2. Users",
+      "description": "Escrita liberada apenas para administrador. As respostas nunca trazem password_hash.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 2000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_008",
+      "parentId": "fld_2__users",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users",
+      "name": "GET /users",
+      "description": "Esperado: 200",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 8000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_009",
+      "parentId": "fld_2__users",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users/1",
+      "name": "GET /users/1",
+      "description": "Esperado: 200",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 9000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_010",
+      "parentId": "fld_2__users",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users/999999",
+      "name": "GET /users/999999",
+      "description": "Esperado: 404",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 10000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_011",
+      "parentId": "fld_2__users",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users",
+      "name": "POST /users - admin",
+      "description": "Esperado: 201\n\n..userDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Usuário Demonstração\",\n  \"email\": \"demo.user@example.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 11000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_012",
+      "parentId": "fld_2__users",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users",
+      "name": "POST /users - coordenador",
+      "description": "Esperado: 403 { errors: [\"Acesso negado\"] }",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Tentativa\",\n  \"email\": \"demo.coord@example.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 12000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_013",
+      "parentId": "fld_2__users",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users",
+      "name": "POST /users - sem senha",
+      "description": "Esperado: 400",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Sem Senha\",\n  \"email\": \"demo.sem.senha@example.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 13000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_014",
+      "parentId": "fld_2__users",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users",
+      "name": "POST /users - e-mail duplicado",
+      "description": "Esperado: 409",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Dup\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 14000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_015",
+      "parentId": "fld_2__users",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users/{{ _.userDemoId }}",
+      "name": "PUT /users/:id - usuário criado acima",
+      "description": "Esperado: 200",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Usuário Demonstração Editado\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 15000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_016",
+      "parentId": "fld_2__users",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/users/{{ _.userDemoId }}",
+      "name": "DELETE /users/:id - usuário criado acima",
+      "description": "Esperado: 204",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 16000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_3__coordenadores",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "3. Coordenadores",
+      "description": "Escrita apenas para administrador. O campo cursoIds exige ao menos 1 item e o PUT substitui o conjunto (os removidos ficam sem coordenador).",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 3000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_017",
+      "parentId": "fld_3__coordenadores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/coordenadores",
+      "name": "GET /coordenadores",
+      "description": "Esperado: 200",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 17000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_018",
+      "parentId": "fld_3__coordenadores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/coordenadores/1",
+      "name": "GET /coordenadores/1",
+      "description": "Esperado: 200 (Mariana Alves, com cursos vinculados)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 18000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_019",
+      "parentId": "fld_3__coordenadores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/coordenadores",
+      "name": "POST /coordenadores - admin",
+      "description": "Esperado: 201\n\n..coordDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Coordenador Demonstração\",\n  \"dataNascimento\": \"1987-06-15\",\n  \"email\": \"demo.coord.novo@example.com\",\n  \"password\": \"123456\",\n  \"cursoIds\": [\n    3\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 19000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_020",
+      "parentId": "fld_3__coordenadores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/coordenadores",
+      "name": "POST /coordenadores - sem cursoIds",
+      "description": "Esperado: 400",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Sem Curso\",\n  \"dataNascimento\": \"1987-06-15\",\n  \"email\": \"demo.sem.curso@example.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 20000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_021",
+      "parentId": "fld_3__coordenadores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/coordenadores",
+      "name": "POST /coordenadores - e-mail já usado pelo admin",
+      "description": "Esperado: 400 (regra 5: e-mail único entre users, coordenadores e professores)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Repetido\",\n  \"dataNascimento\": \"1980-01-01\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"123456\",\n  \"cursoIds\": [\n    2\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 21000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_022",
+      "parentId": "fld_3__coordenadores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/coordenadores/{{ _.coordDemoId }}",
+      "name": "PUT /coordenadores/:id - troca o conjunto de cursos",
+      "description": "Esperado: 200",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"cursoIds\": [\n    2,\n    3\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 22000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_023",
+      "parentId": "fld_3__coordenadores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/coordenadores/{{ _.coordDemoId }}",
+      "name": "DELETE /coordenadores/:id",
+      "description": "Esperado: 204 (os cursos que ele coordenava ficam sem coordenador: SET NULL)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 23000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_4__cursos",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "4. Cursos",
+      "description": "Escrita apenas para administrador. DELETE de curso que possui turmas é bloqueado (RESTRICT).",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 4000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_024",
+      "parentId": "fld_4__cursos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/cursos",
+      "name": "GET /cursos",
+      "description": "Esperado: 200 (leitura liberada a qualquer autenticado)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 24000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_025",
+      "parentId": "fld_4__cursos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/cursos/2",
+      "name": "GET /cursos/2",
+      "description": "Esperado: 200 (Desenvolvimento de Sistemas, com turmas e disciplinas)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 25000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_026",
+      "parentId": "fld_4__cursos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/cursos",
+      "name": "POST /cursos - admin",
+      "description": "Esperado: 201\n\n..cursoDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Curso Demonstração\",\n  \"tipo\": \"Tecnico\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 26000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_027",
+      "parentId": "fld_4__cursos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/cursos",
+      "name": "POST /cursos - coordenador",
+      "description": "Esperado: 403",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Não Pode\",\n  \"tipo\": \"Tecnico\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 27000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_028",
+      "parentId": "fld_4__cursos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/cursos/2",
+      "name": "PUT /cursos/2",
+      "description": "Esperado: 200 (mesmo nome: atualização que não muda nada)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Desenvolvimento de Sistemas\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 28000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_029",
+      "parentId": "fld_4__cursos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/cursos/2",
+      "name": "DELETE /cursos/2 - com turmas",
+      "description": "Esperado: 409 \"Não é possível excluir: existem registros vinculados.\"",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 29000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_030",
+      "parentId": "fld_4__cursos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/cursos/{{ _.cursoDemoId }}",
+      "name": "DELETE /cursos/:id - criado acima",
+      "description": "Esperado: 204",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 30000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_5__disciplinas",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "5. Disciplinas",
+      "description": "Escrita para administrador e coordenador. Filtro por query string: ?cursoId=",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 5000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_031",
+      "parentId": "fld_5__disciplinas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/disciplinas?cursoId=2",
+      "name": "GET /disciplinas?cursoId=2",
+      "description": "Esperado: 200 (só disciplinas do curso DS)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 31000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_032",
+      "parentId": "fld_5__disciplinas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/disciplinas/1",
+      "name": "GET /disciplinas/1",
+      "description": "Esperado: 200 (Lógica de Programação, com cursos vinculados)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 32000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_033",
+      "parentId": "fld_5__disciplinas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/disciplinas",
+      "name": "POST /disciplinas - coordenador",
+      "description": "Esperado: 201\n\n..disciplinaDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Disciplina Demonstração\",\n  \"cursoIds\": [\n    2\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 33000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_034",
+      "parentId": "fld_5__disciplinas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/disciplinas/1",
+      "name": "PUT /disciplinas/1",
+      "description": "Esperado: 200 (mesmo nome: atualização que não muda nada)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Lógica de Programação\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 34000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_035",
+      "parentId": "fld_5__disciplinas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/disciplinas/1",
+      "name": "DELETE /disciplinas/1 - com avaliações",
+      "description": "Esperado: 409 (RESTRICT: existem avaliações)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 35000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_036",
+      "parentId": "fld_5__disciplinas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/disciplinas/{{ _.disciplinaDemoId }}",
+      "name": "DELETE /disciplinas/:id - criada acima",
+      "description": "Esperado: 204",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 36000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_6__turmas",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "6. Turmas",
+      "description": "Escrita para administrador e coordenador. Filtro: ?cursoId=. Inclui GET /:id/alunos (ordem alfabética).",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 6000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_037",
+      "parentId": "fld_6__turmas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas?cursoId=2",
+      "name": "GET /turmas?cursoId=2",
+      "description": "Esperado: 200 (só turmas do curso DS)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 37000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_038",
+      "parentId": "fld_6__turmas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/2",
+      "name": "GET /turmas/2",
+      "description": "Esperado: 200 (DS-2026/1, com curso)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 38000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_039",
+      "parentId": "fld_6__turmas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/2/alunos",
+      "name": "GET /turmas/2/alunos",
+      "description": "Esperado: 200 (alunos da turma em ordem alfabética)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 39000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_040",
+      "parentId": "fld_6__turmas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas",
+      "name": "POST /turmas - coordenador",
+      "description": "Esperado: 201\n\n..turmaDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Turma Demonstração\",\n  \"turno\": \"Noite\",\n  \"cursoId\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 40000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_041",
+      "parentId": "fld_6__turmas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/2",
+      "name": "PUT /turmas/2",
+      "description": "Esperado: 200 (mesmo turno: atualização que não muda nada)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"turno\": \"Noite\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 41000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_042",
+      "parentId": "fld_6__turmas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas",
+      "name": "POST /turmas - professor",
+      "description": "Esperado: 403",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Não Pode\",\n  \"cursoId\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 42000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_043",
+      "parentId": "fld_6__turmas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/2",
+      "name": "DELETE /turmas/2 - com alunos",
+      "description": "Esperado: 409 (RESTRICT: existem alunos)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 43000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_044",
+      "parentId": "fld_6__turmas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/{{ _.turmaDemoId }}",
+      "name": "DELETE /turmas/:id - criada acima",
+      "description": "Esperado: 204",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 44000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_7__professores",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "7. Professores",
+      "description": "Escrita para administrador e coordenador. Filtro: ?disciplinaId=. O professor criado também serve para logar (pasta 1).",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 7000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_045",
+      "parentId": "fld_7__professores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/professores?disciplinaId=1",
+      "name": "GET /professores?disciplinaId=1",
+      "description": "Esperado: 200 (só quem leciona a disciplina)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 45000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_046",
+      "parentId": "fld_7__professores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/professores/1",
+      "name": "GET /professores/1",
+      "description": "Esperado: 200 (Rafael Martins, com disciplinas)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 46000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_047",
+      "parentId": "fld_7__professores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/professores",
+      "name": "POST /professores - coordenador",
+      "description": "Esperado: 201\n\n..profDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Professor Demonstração\",\n  \"dataNascimento\": \"1984-09-09\",\n  \"email\": \"demo.professor@example.com\",\n  \"password\": \"123456\",\n  \"disciplinaIds\": [\n    2\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 47000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_048",
+      "parentId": "fld_7__professores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/professores/1",
+      "name": "PUT /professores/1 - mesmo nome e senha",
+      "description": "Esperado: 200 (faça login de novo para conferir que a senha continuou valendo)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Rafael Martins\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 48000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_049",
+      "parentId": "fld_7__professores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/professores/1",
+      "name": "DELETE /professores/1 - com avaliações",
+      "description": "Esperado: 409 (RESTRICT: existem avaliações)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 49000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_050",
+      "parentId": "fld_7__professores",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/professores/{{ _.profDemoId }}",
+      "name": "DELETE /professores/:id - criado acima",
+      "description": "Esperado: 204",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 50000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_8__alunos",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "8. Alunos",
+      "description": "Escrita apenas para administrador. Regra 1: a turma do aluno precisa pertencer ao curso do aluno. Inclui o boletim.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 8000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_051",
+      "parentId": "fld_8__alunos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos?turmaId=2",
+      "name": "GET /alunos?turmaId=2",
+      "description": "Esperado: 200 (só alunos da turma)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 51000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_052",
+      "parentId": "fld_8__alunos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos?cursoId=2",
+      "name": "GET /alunos?cursoId=2",
+      "description": "Esperado: 200 (só alunos do curso)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 52000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_053",
+      "parentId": "fld_8__alunos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos/1",
+      "name": "GET /alunos/1",
+      "description": "Esperado: 200 (com curso e turma)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 53000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_054",
+      "parentId": "fld_8__alunos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos/1/boletim",
+      "name": "GET /alunos/1/boletim",
+      "description": "Esperado: 200 (notas agrupadas por disciplina, média geral e presença só do aluno)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 54000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_055",
+      "parentId": "fld_8__alunos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos",
+      "name": "POST /alunos - admin",
+      "description": "Esperado: 201\n\n..alunoDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Aluno Demonstração\",\n  \"dataNascimento\": \"2005-07-07\",\n  \"email\": \"demo.aluno@example.com\",\n  \"cursoId\": 2,\n  \"turmaId\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 55000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_056",
+      "parentId": "fld_8__alunos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos",
+      "name": "POST /alunos - turma de outro curso",
+      "description": "Esperado: 400 (regra 1: turma 1 pertence ao curso ADM)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Erro de Regra\",\n  \"dataNascimento\": \"2005-07-07\",\n  \"email\": \"demo.erro.regra@example.com\",\n  \"cursoId\": 2,\n  \"turmaId\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 56000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_057",
+      "parentId": "fld_8__alunos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos",
+      "name": "POST /alunos - coordenador",
+      "description": "Esperado: 403",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Não Pode\",\n  \"dataNascimento\": \"2005-07-07\",\n  \"email\": \"demo.aluno.coord@example.com\",\n  \"cursoId\": 2,\n  \"turmaId\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 57000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_058",
+      "parentId": "fld_8__alunos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos/1",
+      "name": "PUT /alunos/1 - mesmo nome",
+      "description": "Esperado: 200",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Ana Beatriz Souza\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 58000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_059",
+      "parentId": "fld_8__alunos",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos/{{ _.alunoDemoId }}",
+      "name": "DELETE /alunos/:id - criado acima (cascade)",
+      "description": "Esperado: 204 (se tiver notas e presenças, elas vão junto: CASCADE)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 59000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_9__avalia__es",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "9. Avaliações",
+      "description": "Escrita para administrador e professor. Regra 2: a disciplina precisa estar no curso da turma e o professor precisa lecionar a disciplina. Filtros: ?turmaId=&disciplinaId=",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 9000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_060",
+      "parentId": "fld_9__avalia__es",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes?turmaId=2&disciplinaId=1",
+      "name": "GET /avaliacoes?turmaId=2&disciplinaId=1",
+      "description": "Esperado: 200",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 60000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_061",
+      "parentId": "fld_9__avalia__es",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes/1",
+      "name": "GET /avaliacoes/1",
+      "description": "Esperado: 200 (com disciplina, turma e professor)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 61000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_062",
+      "parentId": "fld_9__avalia__es",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes",
+      "name": "POST /avaliacoes - professor",
+      "description": "Esperado: 201\n\n..avaliacaoDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Avaliação Demonstração\",\n  \"data\": \"2026-11-20\",\n  \"disciplinaId\": 1,\n  \"turmaId\": 2,\n  \"professorId\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 62000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_063",
+      "parentId": "fld_9__avalia__es",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes",
+      "name": "POST /avaliacoes - disciplina fora do curso",
+      "description": "Esperado: 400 (regra 2: a disciplina 5 é do curso ADM, não do curso da turma 2)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Errada\",\n  \"data\": \"2026-11-21\",\n  \"disciplinaId\": 5,\n  \"turmaId\": 2,\n  \"professorId\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 63000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_064",
+      "parentId": "fld_9__avalia__es",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes",
+      "name": "POST /avaliacoes - professor não leciona",
+      "description": "Esperado: 400 (regra 2: a disciplina 1 não está no curso da turma 1)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Errada 2\",\n  \"data\": \"2026-11-22\",\n  \"disciplinaId\": 1,\n  \"turmaId\": 1,\n  \"professorId\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 64000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_065",
+      "parentId": "fld_9__avalia__es",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes",
+      "name": "POST /avaliacoes - coordenador",
+      "description": "Esperado: 403",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Não Pode\",\n  \"data\": \"2026-11-23\",\n  \"disciplinaId\": 1,\n  \"turmaId\": 2,\n  \"professorId\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 65000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_066",
+      "parentId": "fld_9__avalia__es",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes/{{ _.avaliacaoDemoId }}",
+      "name": "PUT /avaliacoes/:id - criada acima",
+      "description": "Esperado: 200",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"data\": \"2026-11-25\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 66000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_067",
+      "parentId": "fld_9__avalia__es",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes/1",
+      "name": "DELETE /avaliacoes/1 - com notas",
+      "description": "Esperado: 409 (RESTRICT: existem notas)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 67000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_068",
+      "parentId": "fld_9__avalia__es",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes/{{ _.avaliacaoDemoId }}",
+      "name": "DELETE /avaliacoes/:id - criada acima",
+      "description": "Esperado: 204 (sem notas)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 68000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_10__notas",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "10. Notas",
+      "description": "Escrita para administrador e professor. Regra 3: o aluno precisa estar na turma da avaliação. Uma nota por aluno em cada avaliação (409). Valor entre 0 e 10. Filtros: ?alunoId=&avaliacaoId=\n\nATENÇÃO: execute na ordem. A primeira requisição cria uma avaliação base nesta pasta (a da pasta 9 foi apagada lá) e substitui avaliacaoDemoId; depois copie o id da nota criada para notaDemoId.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 10000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_069",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes",
+      "name": "POST /avaliacoes - base das notas (pasta 10)",
+      "description": "Esperado: 201\n\n..avaliacaoDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Avaliação Base das Notas\",\n  \"data\": \"2026-11-30\",\n  \"disciplinaId\": 1,\n  \"turmaId\": 2,\n  \"professorId\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 69000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_070",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas?alunoId=1",
+      "name": "GET /notas?alunoId=1",
+      "description": "Esperado: 200",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 70000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_071",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas/1",
+      "name": "GET /notas/1",
+      "description": "Esperado: 200 (com aluno e avaliação)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 71000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_072",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas",
+      "name": "POST /notas - aluno da turma da avaliação",
+      "description": "Esperado: 201\n\n..notaDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"valor\": 8.5,\n  \"alunoId\": 1,\n  \"avaliacaoId\": \"{{ _.avaliacaoDemoId }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 72000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_073",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas",
+      "name": "POST /notas - duplicada",
+      "description": "Esperado: 409 (aluno 1 já tem nota na avaliação base)\n\nIgual ao anterior, só muda o valor: mesmo aluno + mesma avaliação = 409.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"valor\": 7,\n  \"alunoId\": 1,\n  \"avaliacaoId\": \"{{ _.avaliacaoDemoId }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 73000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_074",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas",
+      "name": "POST /notas - aluno de outra turma",
+      "description": "Esperado: 400 (regra 3: o aluno 6 é da turma ADM, a avaliação é da turma 2)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"valor\": 6,\n  \"alunoId\": 6,\n  \"avaliacaoId\": \"{{ _.avaliacaoDemoId }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 74000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_075",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas",
+      "name": "POST /notas - valor 11",
+      "description": "Esperado: 400 (a nota precisa estar entre 0 e 10)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"valor\": 11,\n  \"alunoId\": 2,\n  \"avaliacaoId\": \"{{ _.avaliacaoDemoId }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 75000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_076",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes/{{ _.avaliacaoDemoId }}/notas/lote",
+      "name": "POST /avaliacoes/:id/notas/lote - tudo ou nada (400)",
+      "description": "Esperado: 400 e nada é gravado (o aluno 3 NÃO recebe nota 8 nesta tentativa)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"notas\": [\n    {\n      \"alunoId\": 2,\n      \"valor\": 11\n    },\n    {\n      \"alunoId\": 3,\n      \"valor\": 8\n    }\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 76000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_077",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes/{{ _.avaliacaoDemoId }}/notas/lote",
+      "name": "POST /avaliacoes/:id/notas/lote - ok",
+      "description": "Esperado: 201 com 2 registros",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"notas\": [\n    {\n      \"alunoId\": 2,\n      \"valor\": 9\n    },\n    {\n      \"alunoId\": 3,\n      \"valor\": 6.5\n    }\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 77000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_078",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes/{{ _.avaliacaoDemoId }}/notas/lote",
+      "name": "POST /avaliacoes/:id/notas/lote - repetida (409)",
+      "description": "Esperado: 409 e nada extra é gravado (o aluno 2 mantém a nota 9)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"notas\": [\n    {\n      \"alunoId\": 2,\n      \"valor\": 5\n    },\n    {\n      \"alunoId\": 3,\n      \"valor\": 7\n    }\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 78000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_079",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes/{{ _.avaliacaoDemoId }}/notas/lote",
+      "name": "POST /avaliacoes/:id/notas/lote - coordenador",
+      "description": "Esperado: 403",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"notas\": [\n    {\n      \"alunoId\": 2,\n      \"valor\": 10\n    }\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 79000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_080",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas/{{ _.notaDemoId }}",
+      "name": "PUT /notas/:id - nota criada acima",
+      "description": "Esperado: 200",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"valor\": 9\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 80000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_081",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas/{{ _.notaDemoId }}",
+      "name": "DELETE /notas/:id - nota criada acima",
+      "description": "Esperado: 204",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 81000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_082",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas?avaliacaoId={{ _.avaliacaoDemoId }}",
+      "name": "GET /notas?avaliacaoId= - restantes na base",
+      "description": "Esperado: 200 (sobram as 2 do lote - ok)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 82000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_083",
+      "parentId": "fld_10__notas",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/avaliacoes/{{ _.avaliacaoDemoId }}",
+      "name": "DELETE /avaliacoes/:id - base das notas",
+      "description": "Esperado: 409 (RESTRICT: as notas do lote ok continuam aqui)\n\nDiferente do DELETE da pasta 9 (204, sem notas): para apagar, mande DELETE /notas/:id para cada nota listada acima.",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 83000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_11__presen_as",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "11. Presenças",
+      "description": "Escrita para administrador e professor. Regra 4: o aluno precisa estar na turma da chamada. Uma chamada por aluno, turma e dia (409). Filtros: ?alunoId=&turmaId=&data=",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 11000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_084",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/presencas?alunoId=1&data=2026-10-06",
+      "name": "GET /presencas?alunoId=1&data=2026-10-06",
+      "description": "Esperado: 200",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 84000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_085",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/presencas/1",
+      "name": "GET /presencas/1",
+      "description": "Esperado: 200 (com aluno e turma)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 85000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_086",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/presencas",
+      "name": "POST /presencas - professor",
+      "description": "Esperado: 201\n\n..presencaDemoId. Copie o campo \"id\" da resposta para a variável indicada do ambiente.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"data\": \"2026-12-01\",\n  \"presente\": true,\n  \"alunoId\": 2,\n  \"turmaId\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 86000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_087",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/presencas",
+      "name": "POST /presencas - duplicada",
+      "description": "Esperado: 409 (mesmo aluno, turma e dia)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"data\": \"2026-12-01\",\n  \"presente\": false,\n  \"alunoId\": 2,\n  \"turmaId\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 87000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_088",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/presencas",
+      "name": "POST /presencas - aluno de outra turma",
+      "description": "Esperado: 400 (regra 4)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"data\": \"2026-12-01\",\n  \"presente\": true,\n  \"alunoId\": 6,\n  \"turmaId\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 88000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_089",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/2/chamada",
+      "name": "POST /turmas/:id/chamada - lote",
+      "description": "Esperado: 201 com 3 registros",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"data\": \"2026-12-02\",\n  \"presencas\": [\n    {\n      \"alunoId\": 1,\n      \"presente\": true\n    },\n    {\n      \"alunoId\": 2,\n      \"presente\": false\n    },\n    {\n      \"alunoId\": 3,\n      \"presente\": true\n    }\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 89000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_090",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/2/chamada",
+      "name": "POST /turmas/:id/chamada - mesmo dia (rollback)",
+      "description": "Esperado: 409 e nada é gravado (transação: tudo ou nada)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"data\": \"2026-12-02\",\n  \"presencas\": [\n    {\n      \"alunoId\": 1,\n      \"presente\": false\n    }\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 90000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_091",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/2/chamada",
+      "name": "POST /turmas/:id/chamada - coordenador",
+      "description": "Esperado: 403",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"data\": \"2026-12-03\",\n  \"presencas\": [\n    {\n      \"alunoId\": 1,\n      \"presente\": true\n    }\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 91000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_092",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/presencas/{{ _.presencaDemoId }}",
+      "name": "PUT /presencas/:id - criada acima",
+      "description": "Esperado: 200",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"presente\": false\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 92000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_093",
+      "parentId": "fld_11__presen_as",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/presencas/{{ _.presencaDemoId }}",
+      "name": "DELETE /presencas/:id - criada acima",
+      "description": "Esperado: 204",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 93000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request_group",
+      "_id": "fld_12__resumo_dos_erros",
+      "parentId": "wrk_collegium_api",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "name": "12. Resumo dos erros",
+      "description": "Bateria rápida dos cinco status de erro da API: 401, 403, 400, 404 e 409.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 12000,
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_094",
+      "parentId": "fld_12__resumo_dos_erros",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos",
+      "name": "401 - GET /alunos sem token",
+      "description": "Esperado: 401",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 94000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_095",
+      "parentId": "fld_12__resumo_dos_erros",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/cursos",
+      "name": "403 - POST /cursos como coordenador",
+      "description": "Esperado: 403 { errors: [\"Acesso negado\"] }",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Não Pode\",\n  \"tipo\": \"Tecnico\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 95000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_096",
+      "parentId": "fld_12__resumo_dos_erros",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/alunos",
+      "name": "400 - POST /alunos com turma de outro curso",
+      "description": "Esperado: 400 (regra 1)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nomeCompleto\": \"Erro de Regra 2\",\n  \"dataNascimento\": \"2005-01-01\",\n  \"email\": \"demo.erro2@example.com\",\n  \"cursoId\": 2,\n  \"turmaId\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenAdmin }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 96000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_097",
+      "parentId": "fld_12__resumo_dos_erros",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/999999",
+      "name": "404 - GET /turmas/999999",
+      "description": "Esperado: 404",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 97000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_098",
+      "parentId": "fld_12__resumo_dos_erros",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/turmas/2",
+      "name": "409 - DELETE /turmas/2 com alunos",
+      "description": "Esperado: 409",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenCoord }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 98000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    },
+    {
+      "_type": "request",
+      "_id": "req_099",
+      "parentId": "fld_12__resumo_dos_erros",
+      "modified": 1790606239026,
+      "created": 1790606239026,
+      "url": "{{ _.base_url }}/notas",
+      "name": "409 - POST /notas duplicada",
+      "description": "Esperado: 409 (aluno 1 já tem nota na avaliação 1)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"valor\": 7,\n  \"alunoId\": 1,\n  \"avaliacaoId\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "disabled": false
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.tokenProf }}",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 99000,
+      "isDisabled": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "",
+      "preRequestScript": ""
+    }
+  ]
+}

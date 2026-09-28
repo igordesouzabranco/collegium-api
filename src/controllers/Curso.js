@@ -1,12 +1,14 @@
 import Curso from '../models/Curso.js';
 import Disciplina from '../models/Disciplina.js';
 import Coordenador from '../models/Coordenador.js';
+import Turma from '../models/Turma.js';
 import handleError from '../helpers/handleError.js';
 import AppError from '../helpers/AppError.js';
 
 const INCLUIR = [
   { model: Coordenador, as: 'coordenador' },
   { model: Disciplina, as: 'disciplinas' },
+  { model: Turma, as: 'turmas' },
 ];
 
 class CursoController {

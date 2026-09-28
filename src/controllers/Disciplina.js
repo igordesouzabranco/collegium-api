@@ -12,7 +12,13 @@ const INCLUIR = [
 class DisciplinaController {
   async index(req, res) {
     try {
-      const disciplinas = await Disciplina.findAll({ order: [['id', 'DESC']] });
+      const { cursoId } = req.query;
+      const disciplinas = await Disciplina.findAll({
+        include: cursoId
+          ? [{ model: Curso, as: 'cursos', where: { id: cursoId }, required: true }]
+          : undefined,
+        order: [['id', 'DESC']],
+      });
       return res.json(disciplinas);
     } catch (error) {
       return handleError(res, error);
