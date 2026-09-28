@@ -1,6 +1,7 @@
 import Sequelize, { Model } from 'sequelize';
+import bcryptjs from 'bcryptjs';
 
-export default class Aluno extends Model {
+export default class Coordenador extends Model {
   static init(sequelize) {
     super.init({
       nomeCompleto: {
@@ -41,36 +42,47 @@ export default class Aluno extends Model {
           },
         },
       },
-      cursoId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: 'Curso é obrigatório',
-          },
-        },
+      password_hash: {
+        type: Sequelize.STRING,
       },
-      turmaId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+      password: {
+        type: Sequelize.VIRTUAL,
+        defaultValue: '',
         validate: {
-          notNull: {
-            msg: 'Turma é obrigatória',
+          len: {
+            args: [6, 255],
+            msg: 'Senha deve ter entre 6 e 255 caracteres',
           },
         },
       },
     }, {
       sequelize,
-      tableName: 'alunos',
+      tableName: 'coordenadores',
+      // Nunca devolve o hash por padrão
+      defaultScope: {
+        attributes: { exclude: ['password_hash'] },
+      },
+      // Scope usado só no login, quando o hash é necessário
+      scopes: {
+        comSenha: { attributes: { include: ['password_hash'] } },
+      },
+    });
+
+    this.addHook('beforeSave', async (coordenador) => {
+      if (coordenador.password) {
+        coordenador.password_hash = await bcryptjs.hash(coordenador.password, 8);
+      }
     });
 
     return this;
   }
 
   static associate(models) {
-    this.belongsTo(models.Curso, { foreignKey: 'cursoId', as: 'curso' });
-    this.belongsTo(models.Turma, { foreignKey: 'turmaId', as: 'turma' });
-    this.hasMany(models.Nota, { foreignKey: 'alunoId', as: 'notas' });
-    this.hasMany(models.Presenca, { foreignKey: 'alunoId', as: 'presencas' });
+    // Um coordenador pode coordenar vários cursos (FK em cursos)
+    this.hasMany(models.Curso, { foreignKey: 'coordenadorId', as: 'cursos' });
+  }
+
+  checkPassword(password) {
+    return bcryptjs.compareSync(password, this.password_hash);
   }
 }

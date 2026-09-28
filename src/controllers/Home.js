@@ -1,24 +1,7 @@
-import Aluno from '../models/Aluno';
-
 class HomeController {
+  // Só confirma que a API está no ar (não cria mais registro no banco)
   async index(req, res) {
-    try {
-      const newAluno = await Aluno.create({
-        nome: 'Igor',
-        sobrenome: 'Branco',
-        email: 'igor@example.com',
-        idade: 17,
-        serie: 2,
-      });
-      res.json(newAluno);
-    } catch (error) {
-      console.log('MENSAGEM:', error.message);
-      console.log('DETALHE DO BANCO:', error.parent);
-      res.status(500).json({
-        message: error.message,
-        detail: error.parent?.sqlMessage,
-      });
-    }
+    return res.json({ status: 'ok' });
   }
 }
 

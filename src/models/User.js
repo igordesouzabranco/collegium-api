@@ -46,6 +46,14 @@ export default class User extends Model {
       },  {
         sequelize,
         tableName: 'users',
+        // Nunca devolve o hash por padrão
+        defaultScope: {
+          attributes: { exclude: ['password_hash'] },
+        },
+        // Scope usado só no login, quando o hash é necessário
+        scopes: {
+          comSenha: { attributes: { include: ['password_hash'] } },
+        },
       });
 
       this.addHook('beforeSave', async (user) => {

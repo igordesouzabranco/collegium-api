@@ -1,52 +1,36 @@
 import Sequelize, { Model } from 'sequelize';
 
-export default class Aluno extends Model {
+export default class Avaliacao extends Model {
   static init(sequelize) {
     super.init({
-      nomeCompleto: {
+      nome: {
         type: Sequelize.STRING(100),
         allowNull: false,
         validate: {
           notNull: {
-            msg: 'Nome completo é obrigatório',
+            msg: 'Nome é obrigatório',
           },
           len: {
             args: [3, 100],
-            msg: 'Nome completo deve ter entre 3 e 100 caracteres',
+            msg: 'Nome deve ter entre 3 e 100 caracteres',
           },
         },
       },
-      dataNascimento: {
+      data: {
         type: Sequelize.DATEONLY,
         allowNull: false,
         validate: {
           notNull: {
-            msg: 'Data de nascimento é obrigatória',
+            msg: 'Data é obrigatória',
           },
         },
       },
-      email: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-        unique: {
-          args: true,
-          msg: 'Email já cadastrado',
-        },
-        validate: {
-          notNull: {
-            msg: 'Email é obrigatório',
-          },
-          isEmail: {
-            msg: 'Email inválido',
-          },
-        },
-      },
-      cursoId: {
+      disciplinaId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         validate: {
           notNull: {
-            msg: 'Curso é obrigatório',
+            msg: 'Disciplina é obrigatória',
           },
         },
       },
@@ -59,18 +43,27 @@ export default class Aluno extends Model {
           },
         },
       },
+      professorId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Professor é obrigatório',
+          },
+        },
+      },
     }, {
       sequelize,
-      tableName: 'alunos',
+      tableName: 'avaliacoes',
     });
 
     return this;
   }
 
   static associate(models) {
-    this.belongsTo(models.Curso, { foreignKey: 'cursoId', as: 'curso' });
+    this.belongsTo(models.Disciplina, { foreignKey: 'disciplinaId', as: 'disciplina' });
     this.belongsTo(models.Turma, { foreignKey: 'turmaId', as: 'turma' });
-    this.hasMany(models.Nota, { foreignKey: 'alunoId', as: 'notas' });
-    this.hasMany(models.Presenca, { foreignKey: 'alunoId', as: 'presencas' });
+    this.belongsTo(models.Professor, { foreignKey: 'professorId', as: 'professor' });
+    this.hasMany(models.Nota, { foreignKey: 'avaliacaoId', as: 'notas' });
   }
 }
