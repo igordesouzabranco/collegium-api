@@ -11,7 +11,7 @@ Node.js · Express 5 · Sequelize 6 · MariaDB
 ![Sequelize](https://img.shields.io/badge/Sequelize-6.x-52B0E7?logo=sequelize&logoColor=white)
 ![MariaDB](https://img.shields.io/badge/MariaDB-13.x-003545?logo=mariadb&logoColor=white)
 ![ESLint](https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white)
-![License](https://img.shields.io/badge/license-ISC-blue)
+![License](https://img.shields.io/badge/license-MIT-blue)
 ![Versão](https://img.shields.io/badge/v1.0.0-brightgreen)
 ![Insomnia](https://img.shields.io/badge/roteiro-99%20requests-orange)
 
@@ -208,9 +208,10 @@ collegium-api/
 │   └── services/             # regras de negócio e boletim
 ├── eslint.config.mjs
 ├── package.json
+├── LICENSE                   # MIT
 └── AGENTS.md                 # documento de retomada do projeto
 ```
 
 ## Licença
 
-[ISC](https://opensource.org/licenses/ISC)
+Este projeto está sob a licença [MIT](./LICENSE).
