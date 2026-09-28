@@ -271,15 +271,16 @@ sessão e outra. Se sumirem, refaça as baterias a partir desta seção.
   abandonado: agora existe só `main`, local e remoto. Todo o trabalho novo
   entra em `main`.
 - O repositório foi renomeado no GitHub para
-  `https://github.com/igordesouzabranco/collegium-api.git`; o remote antigo
-  ainda funciona por redirecionamento. Para atualizar:
-  `git remote set-url origin https://github.com/igordesouzabranco/collegium-api.git`.
+  `https://github.com/igordesouzabranco/collegium-api.git` e **o remote local
+  já foi atualizado** (`git remote set-url origin ...`); o nome antigo
+  `apirestjs` redireciona.
 - Mudança de comportamento já validada: o `GET /alunos` era público na Fase 2
   e, a partir da Fase 3, passou a exigir token, como as demais leituras.
 - O e-mail do aluno é único na tabela `alunos` (constraint do banco, 409) e,
   além disso, não pode coincidir com o e-mail de quem faz login (regra 5, 400).
-- Confirmar com o professor responsável se a collection do Insomnia deve ficar
-  versionada no repositório ou ser entregue só como arquivo.
+- Decisão do usuário (28/09/2026): a collection do Insomnia fica **versionada
+  no repositório** (`roteiro-insomnia.json` na raiz), junto com o `README.md`
+  criado nesta data (badges, instalação, contas, rotas e filtros).
 
 ---
 
