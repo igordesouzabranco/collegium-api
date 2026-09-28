@@ -2,7 +2,7 @@
 
 # Collegium API
 
-**API REST do Sistema de Gestão Escolar**
+**API REST de Gestão Universitária de Faculdade**
 
 Node.js · Express 5 · Sequelize 6 · MariaDB
 
@@ -12,7 +12,7 @@ Node.js · Express 5 · Sequelize 6 · MariaDB
 ![MariaDB](https://img.shields.io/badge/MariaDB-13.x-003545?logo=mariadb&logoColor=white)
 ![ESLint](https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white)
 ![License](https://img.shields.io/badge/license-ISC-blue)
-![Status](https://img.shields.io/badge/status-5%2F5%20fases-brightgreen)
+![Versão](https://img.shields.io/badge/v1.0.0-brightgreen)
 ![Insomnia](https://img.shields.io/badge/roteiro-99%20requests-orange)
 
 </div>
@@ -21,12 +21,13 @@ Node.js · Express 5 · Sequelize 6 · MariaDB
 
 ## Sobre
 
-API REST para gestão escolar construída a partir do DER da disciplina: cursos,
-disciplinas, turmas, coordenadores, professores, alunos, avaliações, notas e
-presenças, com autenticação por JWT e três papéis de acesso.
+API REST para **gestão universitária de faculdade**: cursos, disciplinas,
+turmas, coordenadores, professores, alunos, avaliações, notas e presenças em um
+único serviço, com autenticação por JWT e três papéis de acesso.
 
-O trabalho foi desenvolvido em 5 fases (banco, autenticação, CRUD, boletim e
-conveniências, seeders + roteiro), todas concluídas e testadas.
+O sistema cobre o dia a dia da instituição: composição das turmas por curso,
+vínculo professor–disciplina, avaliações com notas, chamadas com controle de
+presença e boletim consolidado do aluno.
 
 ## Recursos
 
@@ -209,20 +210,6 @@ collegium-api/
 ├── package.json
 └── AGENTS.md                 # documento de retomada do projeto
 ```
-
-## Fases do trabalho
-
-| Fase | Assunto | Situação |
-| --- | --- | --- |
-| 1 | Banco: migrations e models | Concluída e testada |
-| 2 | Autenticação: JWT, papéis e permissões | Concluída e testada |
-| 3 | CRUD dos recursos | Concluída e testada |
-| 4 | Boletim e rotas de conveniência | Concluída e testada |
-| 5 | Seeders completos e roteiro no Insomnia | Concluída e testada |
-
-Verificação: `npx eslint .` + banco do zero (`db:migrate:undo:all` →
-`db:migrate` → `db:seed:all`) + baterias de teste documentadas no
-[`AGENTS.md`](./AGENTS.md).
 
 ## Licença
 

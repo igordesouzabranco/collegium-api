@@ -7,9 +7,11 @@ falta. Última atualização: 28/09/2026.
 
 ## 1. Contexto e restrições do enunciado
 
-API REST de gestão escolar (Node.js + Express 5 + Sequelize 6 + MariaDB)
-implementada a partir do DER da disciplina. O trabalho foi dividido em 5 fases,
-com parada ao fim de cada uma para o usuário testar:
+API REST de **gestão universitária de faculdade** (Node.js + Express 5 +
+Sequelize 6 + MariaDB) implementada a partir do DER da disciplina. O DER fala em
+"sistema de gestão escolar", mas o foco do produto é faculdade — decisão do
+usuário em 28/09/2026; o `README.md` já usa essa linguagem. O trabalho foi
+dividido em 5 fases, com parada ao fim de cada uma para o usuário testar:
 
 | Fase | Assunto | Situação |
 | --- | --- | --- |
@@ -280,7 +282,9 @@ sessão e outra. Se sumirem, refaça as baterias a partir desta seção.
   além disso, não pode coincidir com o e-mail de quem faz login (regra 5, 400).
 - Decisão do usuário (28/09/2026): a collection do Insomnia fica **versionada
   no repositório** (`roteiro-insomnia.json` na raiz), junto com o `README.md`
-  criado nesta data (badges, instalação, contas, rotas e filtros).
+  criado nesta data (badges, instalação, contas, rotas e filtros). O README
+  apresenta a API como **gestão universitária de faculdade** e não lista as
+  fases do trabalho — a tabela de fases fica só neste arquivo.
 
 ---
 
