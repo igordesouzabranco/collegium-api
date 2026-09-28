@@ -224,8 +224,13 @@ sessão e outra. Se sumirem, refaça as baterias a partir desta seção.
 
 ### Pendências e decisões já tomadas
 
-- Nenhum commit foi feito até agora: `git status` mostra as mudanças das
-  Fases 1 a 4.
+- As Fases 1 a 4 estão commitadas e enviadas para `main`
+  (`82eb549` + merge `c20588e`). O branch `dev` foi abandonado: agora existe
+  só `main`, local e remoto. Todo o trabalho novo entra em `main`.
+- O repositório foi renomeado no GitHub para
+  `https://github.com/igordesouzabranco/collegium-api.git`; o remote antigo
+  ainda funciona por redirecionamento. Para atualizar:
+  `git remote set-url origin https://github.com/igordesouzabranco/collegium-api.git`.
 - Mudança de comportamento já validada: o `GET /alunos` era público na Fase 2
   e, a partir da Fase 3, passou a exigir token, como as demais leituras.
 - O e-mail do aluno é único na tabela `alunos` (constraint do banco, 409) e,
