@@ -285,6 +285,8 @@ sessão e outra. Se sumirem, refaça as baterias a partir desta seção.
   criado nesta data (badges, instalação, contas, rotas e filtros). O README
   apresenta a API como **gestão universitária de faculdade** e não lista as
   fases do trabalho — a tabela de fases fica só neste arquivo.
+- **Deploy ainda não feito**: quando formos fazer, seguir a **seção 10**
+  (Render + TiDB Serverless, decisão do usuário de 28/09/2026).
 
 ---
 
@@ -308,3 +310,74 @@ POST /avaliacoes/{id}/notas/lote
 
 No PowerShell, JSON com aspas costuma quebrar no `curl.exe`: salve o corpo em um
 arquivo e use `-d "@corpo.json"`, ou monte os testes em um script JavaScript.
+
+---
+
+## 10. Deploy pendente: Render (app) + TiDB Serverless (banco)
+
+Decisão do usuário (28/09/2026): deploy continua **fora do escopo do
+enunciado**, mas quando for fazer, a combinação escolhida é **Render Free +
+TiDB Cloud Serverless** — o único combo grátis de verdade que mantém o driver
+`mysql2`/dialect `mariadb` atual (nada de dependência nova).
+
+### Por que essa combinação (e as descartadas)
+
+| Opção | Situação |
+| --- | --- |
+| **Render + TiDB Serverless** | **escolhida**: grátis, MySQL compatível, deploy do GitHub, sem cartão |
+| Render + MySQL gerenciado | descartado: o Render só tem Postgres/Redis gerenciados; MySQL ali exige plano pago (e disco persistente também é pago) |
+| Railway | descartado: crédito grátis de US$ 1/mês não cobre app sempre ativo + MySQL 24/7 (~US$ 5/mês só de RAM do banco) |
+| Fly.io | descartado: trial e depois pay-as-you-go; sem MySQL gerenciado (daria container próprio) |
+| Oracle Always Free | **plano B**: grátis para sempre e 24/7, mas é VPS manual (Docker à mão) |
+
+### O que precisa ser feito (nesta ordem)
+
+1. Criar conta no TiDB Cloud (tidbcloud.com) → cluster **Serverless** (grátis,
+   cota mensal generosa) → copiar a connection string. Escolher região dos
+   EUA para ficar perto do Render (Render: Oregon, Ohio, Virginia, Frankfurt,
+   Singapura).
+2. **TLS**: o Serverless exige conexão criptografada — acrescentar `ssl` em
+   `dialectOptions` em `src/config/database.js` (mudança de configuração,
+   nenhuma dependência nova). O `dialectOptions` já existe (tem `timezone`).
+3. Testar **local** primeiro: `.env` (não commitar) com as mesmas variáveis de
+   sempre (`DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`,
+   `DATABASE_PASSWORD`, `DATABASE`) trocando só os valores pelos do TiDB e
+   rodar `npx sequelize-cli db:migrate` + `db:seed:all` apontando para lá.
+4. Criar o Web Service no Render a partir do repo do GitHub:
+   - Runtime Node; Build `npm install`; **Start
+     `node -r sucrase/register server.js`** (o `npm run dev` usa nodemon, é
+     para desenvolver). Se o build instalar só `dependencies` (sucrase é
+     devDependency), reclassificar `sucrase` para `dependencies` — mudança de
+     posição, não de dependência nova);
+   - Env vars: `DATABASE_HOST/PORT/USERNAME/PASSWORD/DATABASE` (do TiDB),
+     `TOKEN_SECRET`, `TOKEN_EXPIRES_IN`; a `PORT` o próprio Render define e o
+     `server.js` já lê (comentário no arquivo);
+   - `dotenv` com `override: true` é inofensivo lá: não existe arquivo `.env`
+     no Render, as variáveis vêm do painel.
+5. Migrations e seeds **sempre da máquina local** — o Render nunca roda
+   `sequelize-cli` e não precisa de credencial de escrita no banco.
+6. (Opcional) UptimeRobot free batendo em `GET /` a cada 5 min para a API não
+   dormir — ver "armadilha" abaixo.
+7. Verificação do deploy: `smoke-roteiro.js` com `BASE` trocado para a URL do
+   Render (`const BASE = process.env.BASE || 'http://localhost:3000'`) — os
+   76 casos têm que passar lá (contas e ids vêm dos seeds rodados no TiDB).
+
+### Limites do plano grátis do Render (consultado em 28/09/2026, docs atuais)
+
+- **750 horas/mês por workspace**; serviço parado não consome hora. Serviço
+  24/7 gasta ~720 h/mês — o keep-alive com UptimeRobot **come quase tudo** o
+  limite mensal; se estourar, o Render suspende até o próximo mês.
+- Recursos: 0,1 vCPU / 512 MB RAM; **dorme após 15 min sem request** e acorda
+  em ~1 minuto (cold start). Sem cartão de crédito.
+- 5 GB de banda/mês e 500 min de build/mês. Workers e Cron não existem no
+  free.
+- Risco: o Render pode suspender serviço free com muito tráfego **de saída**
+  ("service-initiated traffic", ex.: chamadas ao banco externo) — volume de
+  demo escolar não chega perto disso.
+- O Postgres free expira em 30 dias (irrelevante aqui: usamos TiDB).
+
+### Riscos conhecidos do TiDB
+
+- Não é 100% MySQL (diferenças em casos exóticos); nossas queries são CRUD +
+  joins simples, deve passar sem problema.
+- Latência entre redes (Render × TiDB) — irrelevante para demo.
