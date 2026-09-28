@@ -265,10 +265,11 @@ sessão e outra. Se sumirem, refaça as baterias a partir desta seção.
 
 ### Pendências e decisões já tomadas
 
-- **Falta commitar**: a Fase 5 (seeds, `roteiro-insomnia.json`, este
-  `AGENTS.md`) ainda não foi commitada — as Fases 1 a 4 estão em `main`
-  (`82eb549` + merge `c20588e` + `b25cf52`). O branch `dev` foi abandonado:
-  agora existe só `main`, local e remoto. Todo o trabalho novo entra em `main`.
+- As 5 fases estão commitadas e enviadas para `main`: Fases 1 a 4 em
+  `82eb549` + merge `c20588e` + `b25cf52`, Fase 5 (seeds,
+  `roteiro-insomnia.json`, este `AGENTS.md`) em `81ee9d1`. O branch `dev` foi
+  abandonado: agora existe só `main`, local e remoto. Todo o trabalho novo
+  entra em `main`.
 - O repositório foi renomeado no GitHub para
   `https://github.com/igordesouzabranco/collegium-api.git`; o remote antigo
   ainda funciona por redirecionamento. Para atualizar:
