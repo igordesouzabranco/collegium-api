@@ -8,6 +8,7 @@ import homeRouter from './src/routes/home';
 import userRouter from './src/routes/user.js';
 import tokenRouter from './src/routes/token.js';
 import alunoRouter from './src/routes/aluno.js';
+// import fotoRouter from './src/routes/foto.js';
 
 
 
@@ -28,6 +29,7 @@ class App {
     this.app.use('/users/', userRouter);
     this.app.use('/tokens/', tokenRouter);
     this.app.use('/alunos/', alunoRouter);
+//    this.app.use('/fotos/', fotoRouter);
   }
 }
 

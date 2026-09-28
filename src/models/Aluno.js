@@ -65,6 +65,7 @@ export default class Aluno extends Model {
     }, {
       sequelize,
       tableName: 'alunos',
+      underscored: true,
     });
     return this;
   }
