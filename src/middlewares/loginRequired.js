@@ -40,7 +40,11 @@ export default async function loginRequired(req, res, next) {
     req.userNome = conta.nomeCompleto || conta.nome;
 
     return next();
-  } catch {
+  } catch (error) {
+    // Token expirado/assinatura errada é esperado; o resto (ex.: banco) é bug
+    if (error.name !== 'JsonWebTokenError' && error.name !== 'TokenExpiredError') {
+      console.error('loginRequired:', error);
+    }
     return res.status(401).json({ errors: ['Token inválido'] });
   }
 }

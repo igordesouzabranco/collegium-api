@@ -15,6 +15,8 @@ Node.js · Express 5 · Sequelize 6 · MariaDB
 ![Versão](https://img.shields.io/badge/v1.0.0-brightgreen)
 ![Insomnia](https://img.shields.io/badge/roteiro-99%20requests-orange)
 
+**[API em produção](https://collegium-api-yt3p.onrender.com/)**
+
 </div>
 
 ---
@@ -106,6 +108,21 @@ npm run dev        # http://localhost:3000
 > Os seeds podem ser rodados quantas vezes for preciso: antes de inserir, eles
 > conferem o que já existe e não duplicam nada.
 
+## Produção
+
+A API está publicada em **[collegium-api-yt3p.onrender.com](https://collegium-api-yt3p.onrender.com/)**:
+
+| Peça | Onde |
+| --- | --- |
+| Aplicação | Render (plano gratuito) — build `npm install`, start `node -r sucrase/register server.js` |
+| Banco | TiDB Cloud Serverless (MySQL compatível, conexão TLS com `DATABASE_SSL=true`) |
+| Migrações e seeds | Rodam sempre da máquina local, nunca no Render |
+
+A raiz (`GET /`) devolve uma **página de boas-vindas** para quem abre no
+navegador e `{ status: 'ok' }` para clientes de API (negociação pelo cabeçalho
+`Accept`). Como o plano gratuito dorme após 15 minutos sem acesso, a primeira
+requisição de uma visita pode levar até ~1 minuto para acordar o serviço.
+
 ## Contas de teste
 
 | Perfil | E-mail | Senha |
@@ -133,7 +150,7 @@ Erros sempre no formato `{ errors: ['mensagem'] }`, com status `400`, `401`,
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
-| GET | `/` | Health check → `{ status: 'ok' }` |
+| GET | `/` | Boas-vindas (HTML no navegador) ou `{ status: 'ok' }` para clientes de API |
 | POST | `/tokens` | Login → `{ token, user: { id, nome, email, role } }` |
 
 ### Recursos

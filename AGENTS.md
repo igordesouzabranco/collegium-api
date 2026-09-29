@@ -260,6 +260,14 @@ regras 2 a 4, transações dos lotes, 401/403/404/409) e apaga o que cria. Para
 retomar o trabalho, rode as quatro baterias e o `npx eslint .` — se tudo passar,
 nada quebrou.
 
+As quatro leem `process.env.BASE` (padrão `http://localhost:3000`), então dá
+para validá-las contra o deploy:
+
+```powershell
+$env:BASE = 'https://collegium-api-yt3p.onrender.com'
+node C:\Users\admin\AppData\Local\Temp\opencode\smoke-roteiro.js
+```
+
 **Atenção:** esses arquivos vivem fora do repositório e podem sumir entre uma
 sessão e outra. Se sumirem, refaça as baterias a partir desta seção.
 
@@ -299,8 +307,10 @@ sessão e outra. Se sumirem, refaça as baterias a partir desta seção.
   criado nesta data (badges, instalação, contas, rotas e filtros). O README
   apresenta a API como **gestão universitária de faculdade** e não lista as
   fases do trabalho — a tabela de fases fica só neste arquivo.
-- **Deploy ainda não feito**: quando formos fazer, seguir a **seção 10**
-  (Render + TiDB Serverless, decisão do usuário de 28/09/2026).
+- **Deploy concluído em 28/09/2026**: API no ar em
+  `https://collegium-api-yt3p.onrender.com/` (Render + TiDB Serverless) —
+  detalhes, limites e cuidados na **seção 10**. Falta só (opcional) o
+  UptimeRobot para manter o serviço acordado.
 
 ---
 
@@ -367,24 +377,48 @@ TiDB Cloud Serverless** — o único combo grátis de verdade que mantém o driv
      sintaxe final nos dois engines. **É a única migration editada** (exceção
      registrada à regra "não editar migrations"); `down()` continua vazio e a
      migration 8 recria a tabela `alunos` depois.
-4. **Criar o Web Service no Render** a partir do repo do GitHub:
-   - Runtime Node; Build `npm install`; **Start
-     `node -r sucrase/register server.js`** (o `npm run dev` usa nodemon, é
-     para desenvolver). O script `start` já existe no `package.json` e o
-     `sucrase` já foi movido para `dependencies` (build do Render instala só
-     `dependencies`);
-   - Env vars: `DATABASE_HOST/PORT/USERNAME/PASSWORD/DATABASE` (do TiDB),
-     `DATABASE_SSL=true`, `TOKEN_SECRET`, `TOKEN_EXPIRES_IN`; a `PORT` o
+4. ✅ **Web Service no Render** criado em 28/09/2026 a partir do repo do
+   GitHub: URL **`https://collegium-api-yt3p.onrender.com/`**, região Ohio,
+   runtime Node, build `npm install`, start `node -r sucrase/register server.js`
+   (o script `start` existe no `package.json` e o `sucrase` foi movido para
+   `dependencies`, porque o build do Render instala só `dependencies`);
+   - Env vars no painel: `DATABASE_HOST/PORT/USERNAME/PASSWORD/DATABASE` (do
+     TiDB), `DATABASE_SSL=true`, `TOKEN_SECRET`, `TOKEN_EXPIRES_IN`; a `PORT` o
      próprio Render define e o `server.js` já lê (comentário no arquivo);
    - `dotenv` com `override: true` é inofensivo lá: não existe arquivo `.env`
      no Render, as variáveis vêm do painel.
 5. Migrations e seeds **sempre da máquina local** — o Render nunca roda
    `sequelize-cli` e não precisa de credencial de escrita no banco.
-6. (Opcional) UptimeRobot free batendo em `GET /` a cada 5 min para a API não
-   dormir — ver "armadilha" abaixo.
-7. Verificação do deploy: `smoke-roteiro.js` com `BASE` trocado para a URL do
-   Render (`const BASE = process.env.BASE || 'http://localhost:3000'`) — os
-   76 casos têm que passar lá (contas e ids vêm dos seeds rodados no TiDB).
+6. (Pendente, opcional) UptimeRobot free batendo em `GET /` a cada 5 min para a
+   API não dormir — ver "armadilha" abaixo.
+7. ✅ **Verificação do deploy** feita em 28/09/2026: as 4 baterias com `BASE`
+   apontando para a URL do Render — `smoke-roteiro.js` 76/76 +
+   `testes-fase2.js` 27/27 + `testes-fase3.js` 80/80 + `testes-fase4.js` 36/36
+   = **219/219**, e o banco volta exatamente ao estado dos seeds.
+
+### Página de boas-vindas na raiz (mesma data)
+
+- `GET /` agora devolve **HTML** para navegadores e `{ status: 'ok' }` para
+  clientes de API, por negociação no `Home.index`
+  (`req.accepts(['json','html'])`). O arquivo é `public/index.html` (autocontido,
+  sem CDN): apresentação da API, contas de teste, login de teste no próprio
+  navegador, tabela de rotas/permissões/filtros, lotes e erros.
+- Motivo da negociação: o `testes-fase2.js` espera `GET /` com status 200 e um
+  UptimeRobot pode bater em `/` esperando saúde — os dois continuam verdes.
+
+### Atenção: 401 mascarado durante o deploy
+
+- Durante a janela de deploy/restart, logins e chamadas autenticadas voltaram
+  **401** de forma intermitente por alguns minutos, e voltaram a funcionar
+  sozinhos; logo depois, tudo passou (219/219).
+- A causa fica escondida porque `Token.store` e `loginRequired` transformam
+  **qualquer** exceção em 401 (`catch` genérico). `Token.store` já imprimia o
+  erro com `console.error`; o `loginRequired` passou a imprimir também (exceto
+  token expirado/assinatura, que é esperado).
+- Se recorrer: **Render → Logs** do serviço, procurando `loginRequired:` ou o
+  stack do `POST /tokens`. Não é o banco: testes de timing mostraram as queries
+  ao TiDB respondendo normalmente (um `POST /tokens` com e-mail inexistente
+  gastou ~1,2 s = 3 queries executadas).
 
 ### Limites do plano grátis do Render (consultado em 28/09/2026, docs atuais)
 
