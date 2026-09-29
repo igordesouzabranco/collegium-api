@@ -15,7 +15,7 @@ Node.js · Express 5 · Sequelize 6 · MariaDB
 ![Versão](https://img.shields.io/badge/v1.0.0-brightgreen)
 ![Insomnia](https://img.shields.io/badge/roteiro-99%20requests-orange)
 
-**[API em produção](https://collegium-api-yt3p.onrender.com/)**
+### [https://collegium-api-yt3p.onrender.com](https://collegium-api-yt3p.onrender.com/)
 
 </div>
 
