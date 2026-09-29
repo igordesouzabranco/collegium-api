@@ -30,13 +30,18 @@ Restrições que continuam valendo:
 - Estilo: 2 espaços, aspas simples, ponto e vírgula, imports locais com `.js`,
   controllers exportados como instância (`export default new XController()`),
   comentários e mensagens de erro em português.
-- Não editar migrations já criadas. Não usar `underscored`; timestamps
+- Não editar migrations já criadas — **exceto a**
+  `20260921234027-mudar-email-aluno-unique`, trocada de `changeColumn` para
+  `addIndex` na Fase de deploy porque o TiDB rejeita `CHANGE ... UNIQUE`
+  (ver seção 10). Não usar `underscored`; timestamps
   (`createdAt`/`updatedAt`) ligados em todos os models.
 - Status: 200, 201 (POST), 204 (DELETE), 400, 401, 403, 404 e 409.
 - Erros sempre no formato `{ errors: ['mensagem'] }`, respondidos pelo único
   helper `src/helpers/handleError.js`.
 - Fora do escopo (não fazer): PDF, paginação, fotos, escopo por coordenador ou
-  professor, recuperação de senha, testes automatizados com framework e deploy.
+  professor, recuperação de senha e testes automatizados com framework. O
+  deploy era fora de escopo, mas foi iniciado por decisão do usuário (seção
+  10) em 28/09/2026.
 
 ---
 
@@ -196,6 +201,15 @@ Matriz de escrita (leitura é sempre permitida a qualquer autenticado):
 - `sequelize.query(sql)` no dialect `mariadb` precisa de
   `{ type: QueryTypes.SELECT }`: sem o `type`, a query simples quebra com
   `Cannot delete property 'meta' of [object Array]`.
+- **TiDB Serverless (não é MySQL puro)**: rejeita
+  `ALTER TABLE ... CHANGE ... UNIQUE` com erro 8200 "can't change column
+  constraint" — use `addIndex(..., { unique: true })`; aceita TLS só com
+  certificado Let's Encrypt (CA do sistema, `rejectUnauthorized: true`);
+  conexão sem SSL é recusada. `createTable` com `unique: true` e
+  `dropTable` funcionam normalmente.
+- No Render, `npm install` (build) só instala `dependencies`: `sucrase` foi
+  movido de `devDependencies` para `dependencies` para o `start`
+  (`node -r sucrase/register server.js`) funcionar.
 
 ---
 
@@ -332,26 +346,36 @@ TiDB Cloud Serverless** — o único combo grátis de verdade que mantém o driv
 
 ### O que precisa ser feito (nesta ordem)
 
-1. Criar conta no TiDB Cloud (tidbcloud.com) → cluster **Serverless** (grátis,
-   cota mensal generosa) → copiar a connection string. Escolher região dos
-   EUA para ficar perto do Render (Render: Oregon, Ohio, Virginia, Frankfurt,
-   Singapura).
-2. **TLS**: o Serverless exige conexão criptografada — acrescentar `ssl` em
-   `dialectOptions` em `src/config/database.js` (mudança de configuração,
-   nenhuma dependência nova). O `dialectOptions` já existe (tem `timezone`).
-3. Testar **local** primeiro: `.env` (não commitar) com as mesmas variáveis de
-   sempre (`DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`,
-   `DATABASE_PASSWORD`, `DATABASE`) trocando só os valores pelos do TiDB e
-   rodar `npx sequelize-cli db:migrate` + `db:seed:all` apontando para lá.
-4. Criar o Web Service no Render a partir do repo do GitHub:
+1. ✅ **Criar conta no TiDB Cloud** (feito em 28/09/2026): cluster
+   **Serverless**, região `sa-east-1` (São Paulo). Host
+   `gateway01.sa-east-1.prod.aws.tidbcloud.com`, porta `4000`, usuário e senha
+   estão no `.env` local (gitignored; backup do `.env` antigo em
+   `%TEMP%\opencode\.env.mariadb.bak`). Banco `escola` criado com
+   `CREATE DATABASE ... CHARACTER SET utf8mb4`.
+2. ✅ **TLS**: `ssl` condicional em `dialectOptions` em
+   `src/config/database.js` — só liga quando `DATABASE_SSL=true` (o TiDB usa
+   certificado Let's Encrypt; `rejectUnauthorized: true` funciona com o CA do
+   sistema). Local continua sem SSL (`.env` sem a flag).
+3. ✅ **Testar local apontando para o TiDB**: `.env` trocado para o TiDB,
+   `db:migrate` (14/14) + `db:seed:all` (12/12) e as 4 baterias passaram
+   contra o TiDB: smoke 76/76 + 27/27 + 80/80 + 36/36 = **219/219**, `dev.log`
+   sem 500, `npx eslint .` limpo.
+   - **Achado TiDB**: ele rejeita `ALTER TABLE ... CHANGE ... UNIQUE`
+     (erro 8200 "can't change column constraint"). A migration
+     `20260921234027-mudar-email-aluno-unique` foi trocada de
+     `changeColumn` para `addIndex(..., { unique: true })` — mesma
+     sintaxe final nos dois engines. **É a única migration editada** (exceção
+     registrada à regra "não editar migrations"); `down()` continua vazio e a
+     migration 8 recria a tabela `alunos` depois.
+4. **Criar o Web Service no Render** a partir do repo do GitHub:
    - Runtime Node; Build `npm install`; **Start
      `node -r sucrase/register server.js`** (o `npm run dev` usa nodemon, é
-     para desenvolver). Se o build instalar só `dependencies` (sucrase é
-     devDependency), reclassificar `sucrase` para `dependencies` — mudança de
-     posição, não de dependência nova);
+     para desenvolver). O script `start` já existe no `package.json` e o
+     `sucrase` já foi movido para `dependencies` (build do Render instala só
+     `dependencies`);
    - Env vars: `DATABASE_HOST/PORT/USERNAME/PASSWORD/DATABASE` (do TiDB),
-     `TOKEN_SECRET`, `TOKEN_EXPIRES_IN`; a `PORT` o próprio Render define e o
-     `server.js` já lê (comentário no arquivo);
+     `DATABASE_SSL=true`, `TOKEN_SECRET`, `TOKEN_EXPIRES_IN`; a `PORT` o
+     próprio Render define e o `server.js` já lê (comentário no arquivo);
    - `dotenv` com `override: true` é inofensivo lá: não existe arquivo `.env`
      no Render, as variáveis vêm do painel.
 5. Migrations e seeds **sempre da máquina local** — o Render nunca roda

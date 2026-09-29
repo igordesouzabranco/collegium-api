@@ -12,5 +12,9 @@ module.exports = {
   },
   dialectOptions: {
     timezone: '-03:00',
+    // TiDB Serverless só aceita conexão criptografada (ligado via DATABASE_SSL)
+    ...(process.env.DATABASE_SSL === 'true'
+      ? { ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: true } }
+      : {}),
   },
 };
