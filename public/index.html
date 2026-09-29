@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Collegium API — Gestão Universitária de Faculdade</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --link: #58a6ff;
+      --ok: #3fb950;
+      --err: #f85149;
+      --warn: #d29922;
+      --get: #58a6ff;
+      --post: #3fb950;
+      --put: #d29922;
+      --del: #f85149;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 2rem 1rem; background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.6;
+    }
+    main { max-width: 900px; margin: 0 auto; }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem;
+    }
+    h1 { margin: 0 0 .25rem; font-size: 1.9rem; }
+    h2 { font-size: 1.15rem; margin: 0 0 .75rem; padding-bottom: .5rem; border-bottom: 1px solid var(--border); }
+    p { margin: .5rem 0; }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      background: #0d1117; border: 1px solid var(--border); border-radius: 6px;
+      font-size: .88em;
+    }
+    code { padding: 2px 6px; }
+    pre { padding: .85rem 1rem; overflow-x: auto; margin: .5rem 0; }
+    .sub { color: var(--muted); margin-top: 0; }
+    .badges { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+    .badge {
+      font-size: .78rem; padding: 3px 10px; border-radius: 999px;
+      border: 1px solid var(--border); background: #0d1117; color: var(--muted);
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    .dot.on { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+    .dot.off { background: var(--err); }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; margin: .5rem 0; }
+    th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+    tr:last-child td { border-bottom: none; }
+    .m {
+      font-weight: 700; font-size: .75rem; letter-spacing: .03em;
+      padding: 2px 8px; border-radius: 5px; border: 1px solid currentColor; display: inline-block;
+    }
+    .m.get { color: var(--get); }
+    .m.post { color: var(--post); }
+    .m.put { color: var(--put); }
+    .m.delete { color: var(--del); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: .25rem; }
+    input {
+      width: 100%; padding: .55rem .7rem; background: #0d1117; color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px; font-size: .95rem;
+    }
+    input:focus { outline: none; border-color: var(--link); }
+    button {
+      cursor: pointer; background: var(--post); color: #04260d; border: none;
+      padding: .6rem 1.1rem; border-radius: 6px; font-weight: 700; font-size: .92rem;
+    }
+    button:hover { filter: brightness(1.1); }
+    button.sec { background: #21262d; color: var(--text); border: 1px solid var(--border); font-weight: 500; }
+    .msg { font-size: .88rem; margin-top: .6rem; min-height: 1.2em; }
+    .msg.ok { color: var(--ok); }
+    .msg.err { color: var(--err); }
+    .row { display: flex; gap: .5rem; align-items: flex-start; }
+    .tag { font-size: .78rem; color: var(--muted); }
+    footer { color: var(--muted); font-size: .85rem; text-align: center; }
+    .note { font-size: .85rem; color: var(--warn); }
+    @media (max-width: 560px) { .card { padding: 1.25rem; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="card">
+      <h1>Collegium API</h1>
+      <p class="sub">API REST de <strong>gestão universitária de faculdade</strong> — Node.js, Express 5,
+        Sequelize 6 e MariaDB/TiDB. Cadastros de cursos, turmas, disciplinas, professores e alunos,
+        com avaliações, notas, chamadas e boletim.</p>
+      <div class="badges">
+        <span class="badge"><span class="dot" id="dot"></span><span id="status">verificando…</span></span>
+        <span class="badge">v1.0.0</span>
+        <span class="badge">99 requests no Insomnia</span>
+        <span class="badge">MIT</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Começar em 3 passos</h2>
+      <p><strong>1.</strong> Obtenha o token com um dos <a href="#contas">contas de teste</a>:</p>
+      <pre>POST /tokens
+{ "email": "john.doe@example.com", "password": "123456" }</pre>
+      <p><strong>2.</strong> Use-o no cabeçalho das demais requisições:</p>
+      <pre>Authorization: Bearer &lt;token&gt;</pre>
+      <p><strong>3.</strong> Explore os recursos — <a href="#rotas">rotas</a>,
+        <a href="#filtros">filtros</a> e <a href="#lotes">rotas em lote</a>.</p>
+
+      <h2 style="margin-top:1.5rem">Testar login aqui</h2>
+      <form id="form-login" class="grid">
+        <div>
+          <label for="email">E-mail</label>
+          <input id="email" name="email" value="john.doe@example.com" autocomplete="off">
+        </div>
+        <div>
+          <label for="senha">Senha</label>
+          <input id="senha" name="senha" type="password" value="123456">
+        </div>
+        <div style="display:flex; align-items:flex-end; gap:.5rem">
+          <button type="submit">Obter token</button>
+          <button type="button" class="sec" id="btn-copiar" hidden>Copiar</button>
+        </div>
+      </form>
+      <div class="msg" id="msg"></div>
+      <pre id="token" hidden></pre>
+    </section>
+
+    <section class="card" id="contas">
+      <h2>Contas de teste</h2>
+      <table>
+        <thead><tr><th>Perfil</th><th>E-mail</th><th>Senha</th></tr></thead>
+        <tbody>
+          <tr><td>Administrador</td><td><code>john.doe@example.com</code></td><td><code>123456</code></td></tr>
+          <tr><td>Coordenador</td><td><code>coord.teste@example.com</code></td><td><code>123456</code></td></tr>
+          <tr><td>Professor</td><td><code>prof.rafael@example.com</code></td><td><code>123456</code></td></tr>
+        </tbody>
+      </table>
+      <p class="tag">Leitura (<span class="m get">GET</span>) é liberada para qualquer autenticado.</p>
+    </section>
+
+    <section class="card" id="rotas">
+      <h2>Rotas</h2>
+
+      <p class="tag">Públicas (sem token)</p>
+      <table>
+        <tbody>
+          <tr><td><span class="m get">GET</span></td><td><code>/</code></td><td>Esta página / health check</td></tr>
+          <tr><td><span class="m post">POST</span></td><td><code>/tokens</code></td><td>Login → <code>{ token, user }</code></td></tr>
+        </tbody>
+      </table>
+
+      <p class="tag" style="margin-top:1rem">Recursos (com token)</p>
+      <table>
+        <thead><tr><th>Rotas</th><th>Escrita liberada para</th></tr></thead>
+        <tbody>
+          <tr><td><code>/users</code>, <code>/coordenadores</code>, <code>/cursos</code>, <code>/alunos</code></td><td>somente administrador</td></tr>
+          <tr><td><code>/disciplinas</code>, <code>/turmas</code>, <code>/professores</code></td><td>administrador e coordenador</td></tr>
+          <tr><td><code>/avaliacoes</code>, <code>/notas</code>, <code>/presencas</code></td><td>administrador e professor</td></tr>
+        </tbody>
+      </table>
+      <p class="tag">Cada recurso aceita <span class="m get">GET</span> <code>/</code>,
+        <span class="m get">GET</span> <code>/:id</code>,
+        <span class="m post">POST</span> <code>/</code>,
+        <span class="m put">PUT</span> <code>/:id</code> e
+        <span class="m delete">DELETE</span> <code>/:id</code>.</p>
+
+      <p class="tag" style="margin-top:1rem">Rotas especiais</p>
+      <table>
+        <thead><tr><th>Método</th><th>Rota</th><th>Quem</th></tr></thead>
+        <tbody>
+          <tr><td><span class="m get">GET</span></td><td><code>/alunos/:id/boletim</code></td><td>qualquer autenticado</td></tr>
+          <tr><td><span class="m get">GET</span></td><td><code>/turmas/:id/alunos</code></td><td>qualquer autenticado</td></tr>
+          <tr><td><span class="m post">POST</span></td><td><code>/turmas/:id/chamada</code></td><td>administrador e professor</td></tr>
+          <tr><td><span class="m post">POST</span></td><td><code>/avaliacoes/:id/notas/lote</code></td><td>administrador e professor</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card" id="filtros">
+      <h2>Filtros por query string</h2>
+      <table>
+        <thead><tr><th>Rota</th><th>Query string</th></tr></thead>
+        <tbody>
+          <tr><td><code>/alunos</code></td><td><code>?turmaId=</code>, <code>?cursoId=</code></td></tr>
+          <tr><td><code>/turmas</code></td><td><code>?cursoId=</code></td></tr>
+          <tr><td><code>/disciplinas</code></td><td><code>?cursoId=</code></td></tr>
+          <tr><td><code>/professores</code></td><td><code>?disciplinaId=</code></td></tr>
+          <tr><td><code>/avaliacoes</code></td><td><code>?turmaId=</code>, <code>?disciplinaId=</code>, <code>?professorId=</code></td></tr>
+          <tr><td><code>/notas</code></td><td><code>?alunoId=</code>, <code>?avaliacaoId=</code>, <code>?turmaId=</code>, <code>?disciplinaId=</code></td></tr>
+          <tr><td><code>/presencas</code></td><td><code>?alunoId=</code>, <code>?turmaId=</code>, <code>?data=</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card" id="lotes">
+      <h2>Rotas em lote (tudo ou nada)</h2>
+      <p class="tag">Roda dentro de uma transação: se algum item violar a regra,
+        <strong>nada</strong> é gravado. Chamada repetida no mesmo dia ou nota já
+        existente devolve <code>409</code>.</p>
+      <p><code>POST /turmas/{id}/chamada</code></p>
+      <pre>{ "data": "2026-10-05", "presencas": [{ "alunoId": 1, "presente": true }] }</pre>
+      <p><code>POST /avaliacoes/{id}/notas/lote</code></p>
+      <pre>{ "notas": [{ "alunoId": 1, "valor": 8.5 }] }</pre>
+    </section>
+
+    <section class="card">
+      <h2>Erros</h2>
+      <p class="tag">Sempre no formato:</p>
+      <pre>{ "errors": ["mensagem em português"] }</pre>
+      <table>
+        <thead><tr><th>Status</th><th>Quando</th></tr></thead>
+        <tbody>
+          <tr><td><code>200</code> / <code>201</code> / <code>204</code></td><td>sucesso (POST devolve 201, DELETE devolve 204)</td></tr>
+          <tr><td><code>400</code></td><td>violação de regra de negócio ou corpo inválido</td></tr>
+          <tr><td><code>401</code></td><td>sem token, token inválido ou credenciais inválidas</td></tr>
+          <tr><td><code>403</code></td><td>perfil sem permissão para escrever</td></tr>
+          <tr><td><code>404</code></td><td>registro inexistente</td></tr>
+          <tr><td><code>409</code></td><td>e-mail duplicado, registro já existente ou vínculo impede a exclusão</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      <p>
+        <a href="https://github.com/igordesouzabranco/collegium-api">Código no GitHub</a> ·
+        <a href="https://github.com/igordesouzabranco/collegium-api/blob/main/roteiro-insomnia.json">Roteiro do Insomnia (99 requests)</a> ·
+        <a href="https://github.com/igordesouzabranco/collegium-api/blob/main/README.md">README</a>
+      </p>
+      <p class="note">Hospedado no plano gratuito do Render — se a página demorou a carregar,
+        é porque o servidor estava dormindo por inatividade.</p>
+    </footer>
+  </main>
+
+  <script>
+    var dot = document.getElementById('dot');
+    var status = document.getElementById('status');
+
+    fetch('/', { headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (d && d.status === 'ok') {
+          dot.className = 'dot on';
+          status.textContent = 'API online';
+        } else {
+          throw new Error('resposta inesperada');
+        }
+      })
+      .catch(function () {
+        dot.className = 'dot off';
+        status.textContent = 'API indisponível';
+      });
+
+    var form = document.getElementById('form-login');
+    var msg = document.getElementById('msg');
+    var caixaToken = document.getElementById('token');
+    var btnCopiar = document.getElementById('btn-copiar');
+    var tokenAtual = '';
+
+    form.addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      msg.className = 'msg';
+      msg.textContent = 'enviando…';
+      caixaToken.hidden = true;
+      btnCopiar.hidden = true;
+
+      fetch('/tokens', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('senha').value,
+        }),
+      })
+        .then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
+        .then(function (r) {
+          if (r.status !== 200) {
+            msg.className = 'msg err';
+            msg.textContent = (r.body.errors || ['erro'])[0];
+            return;
+          }
+          tokenAtual = r.body.token;
+          msg.className = 'msg ok';
+          msg.textContent = 'Login como ' + r.body.user.role + ' — token obtido.';
+          caixaToken.textContent = tokenAtual;
+          caixaToken.hidden = false;
+          btnCopiar.hidden = false;
+        })
+        .catch(function () {
+          msg.className = 'msg err';
+          msg.textContent = 'Falha ao falar com a API.';
+        });
+    });
+
+    btnCopiar.addEventListener('click', function () {
+      navigator.clipboard.writeText(tokenAtual).then(function () {
+        btnCopiar.textContent = 'Copiado!';
+        setTimeout(function () { btnCopiar.textContent = 'Copiar'; }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>
