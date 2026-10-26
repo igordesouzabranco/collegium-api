@@ -26,12 +26,12 @@ class App {
     this.app = express();
     this.middlewares();
     this.routes();
-    this.app.use(cors());
   }
 
   middlewares() {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
+    this.app.use(cors());
   }
 
   routes() {
