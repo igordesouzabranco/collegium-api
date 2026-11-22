@@ -12,7 +12,6 @@ Node.js · Express 5 · Sequelize 6 · MariaDB
 ![MariaDB](https://img.shields.io/badge/MariaDB-13.x-003545?logo=mariadb&logoColor=white)
 ![ESLint](https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue)
-![Versão](https://img.shields.io/badge/v1.0.0-brightgreen)
 ![Insomnia](https://img.shields.io/badge/roteiro-99%20requests-orange)
 
 **[API em produção](https://collegium-api-yt3p.onrender.com/)**
