@@ -66,11 +66,17 @@
     .m.delete { color: var(--del); }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
     label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: .25rem; }
-    input {
+    input, select, textarea {
       width: 100%; padding: .55rem .7rem; background: #0d1117; color: var(--text);
       border: 1px solid var(--border); border-radius: 6px; font-size: .95rem;
+      font-family: inherit;
     }
-    input:focus { outline: none; border-color: var(--link); }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--link); }
+    input[type="checkbox"] { width: auto; }
+    textarea {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: .88rem; resize: vertical;
+    }
     button {
       cursor: pointer; background: var(--post); color: #04260d; border: none;
       padding: .6rem 1.1rem; border-radius: 6px; font-weight: 700; font-size: .92rem;
@@ -84,225 +90,592 @@
     .tag { font-size: .78rem; color: var(--muted); }
     footer { color: var(--muted); font-size: .85rem; text-align: center; }
     .note { font-size: .85rem; color: var(--warn); }
-    @media (max-width: 560px) { .card { padding: 1.25rem; } }
+
+    /* Console de requisições */
+    button.mini { padding: .3rem .7rem; font-size: .8rem; }
+    button:disabled { opacity: .45; cursor: not-allowed; filter: none; }
+    .barra { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: .75rem 0; }
+    .req-linha { display: grid; grid-template-columns: 110px 1fr auto; gap: .5rem; align-items: center; }
+    .check { display: flex; align-items: center; gap: .4rem; margin: .6rem 0 0; cursor: pointer; }
+    .atalhos { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 1rem; }
+    .atalhos button { display: inline-flex; align-items: center; gap: .4rem; }
+    .resp-topo { display: flex; align-items: center; gap: .75rem; margin-top: 1rem; }
+    .m.ok { color: var(--ok); }
+    .m.err { color: var(--err); }
+    #resp-corpo { max-height: 420px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+    details { margin: .5rem 0; }
+    summary { cursor: pointer; color: var(--muted); font-size: .85rem; }
+    @media (max-width: 560px) {
+      .card { padding: 1.25rem; }
+      .req-linha { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <section class="card">
-      <h1>Collegium API</h1>
-      <p class="sub">API REST de <strong>gestão universitária de faculdade</strong> — Node.js, Express 5,
-        Sequelize 6 e MariaDB/TiDB. Cadastros de cursos, turmas, disciplinas, professores e alunos,
-        com avaliações, notas, chamadas e boletim.</p>
-      <div class="badges">
-        <span class="badge"><span class="dot" id="dot"></span><span id="status">verificando…</span></span>
-        <span class="badge">v1.0.0</span>
-        <span class="badge">99 requests no Insomnia</span>
-        <span class="badge">MIT</span>
-      </div>
-    </section>
+<main>
+  <section class="card">
+    <h1>Collegium API</h1>
+    <p class="sub">API REST de <strong>gestão universitária de faculdade</strong> — Node.js, Express 5,
+      Sequelize 6 e MariaDB/TiDB. Cadastros de cursos, turmas, disciplinas, professores e alunos,
+      com avaliações, notas, chamadas e boletim.</p>
+    <div class="badges">
+      <span class="badge"><span class="dot" id="dot"></span><span id="status">verificando…</span></span>
+      <a class="badge" id="versao" href="https://github.com/igordesouzabranco/collegium-api/releases"
+         target="_blank" rel="noopener" title="Ver as releases no GitHub">versão…</a>
+      <span class="badge">99 requests no Insomnia</span>
+      <span class="badge">MIT</span>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Começar em 3 passos</h2>
-      <p><strong>1.</strong> Obtenha o token com um dos <a href="#contas">contas de teste</a>:</p>
-      <pre>POST /tokens
+  <section class="card">
+    <h2>Começar em 3 passos</h2>
+    <p><strong>1.</strong> Obtenha o token com uma das <a href="#contas">contas de teste</a>:</p>
+    <pre>POST /tokens
 { "email": "john.doe@example.com", "password": "123456" }</pre>
-      <p><strong>2.</strong> Use-o no cabeçalho das demais requisições:</p>
-      <pre>Authorization: Bearer &lt;token&gt;</pre>
-      <p><strong>3.</strong> Explore os recursos — <a href="#rotas">rotas</a>,
-        <a href="#filtros">filtros</a> e <a href="#lotes">rotas em lote</a>.</p>
+    <p><strong>2.</strong> Use-o no cabeçalho das demais requisições:</p>
+    <pre>Authorization: Bearer &lt;token&gt;</pre>
+    <p><strong>3.</strong> Explore os recursos — <a href="#rotas">rotas</a>,
+      <a href="#filtros">filtros</a> e <a href="#lotes">rotas em lote</a> —
+      ou faça as requisições aqui mesmo no <a href="#console">console</a>.</p>
 
-      <h2 style="margin-top:1.5rem">Testar login aqui</h2>
-      <form id="form-login" class="grid">
-        <div>
-          <label for="email">E-mail</label>
-          <input id="email" name="email" value="john.doe@example.com" autocomplete="off">
-        </div>
-        <div>
-          <label for="senha">Senha</label>
-          <input id="senha" name="senha" type="password" value="123456">
-        </div>
-        <div style="display:flex; align-items:flex-end; gap:.5rem">
-          <button type="submit">Obter token</button>
-          <button type="button" class="sec" id="btn-copiar" hidden>Copiar</button>
-        </div>
-      </form>
-      <div class="msg" id="msg"></div>
-      <pre id="token" hidden></pre>
-    </section>
+    <h2 style="margin-top:1.5rem">Testar login aqui</h2>
+    <form id="form-login" class="grid">
+      <div>
+        <label for="email">E-mail</label>
+        <input id="email" name="email" value="john.doe@example.com" autocomplete="off">
+      </div>
+      <div>
+        <label for="senha">Senha</label>
+        <input id="senha" name="senha" type="password" value="123456">
+      </div>
+      <div style="display:flex; align-items:flex-end; gap:.5rem">
+        <button type="submit">Obter token</button>
+        <button type="button" class="sec" id="btn-copiar" hidden>Copiar</button>
+      </div>
+    </form>
+    <div class="msg" id="msg"></div>
+    <pre id="token" hidden></pre>
+  </section>
 
-    <section class="card" id="contas">
-      <h2>Contas de teste</h2>
-      <table>
-        <thead><tr><th>Perfil</th><th>E-mail</th><th>Senha</th></tr></thead>
-        <tbody>
-          <tr><td>Administrador</td><td><code>john.doe@example.com</code></td><td><code>123456</code></td></tr>
-          <tr><td>Coordenador</td><td><code>coord.teste@example.com</code></td><td><code>123456</code></td></tr>
-          <tr><td>Professor</td><td><code>prof.rafael@example.com</code></td><td><code>123456</code></td></tr>
-        </tbody>
-      </table>
-      <p class="tag">Leitura (<span class="m get">GET</span>) é liberada para qualquer autenticado.</p>
-    </section>
+  <section class="card" id="contas">
+    <h2>Contas de teste</h2>
+    <table>
+      <thead><tr><th>Perfil</th><th>E-mail</th><th>Senha</th><th></th></tr></thead>
+      <tbody>
+      <tr><td>Administrador</td><td><code>john.doe@example.com</code></td><td><code>123456</code></td>
+        <td><button type="button" class="sec mini usar-conta" data-email="john.doe@example.com" data-senha="123456">Entrar</button></td></tr>
+      <tr><td>Coordenador</td><td><code>coord.teste@example.com</code></td><td><code>123456</code></td>
+        <td><button type="button" class="sec mini usar-conta" data-email="coord.teste@example.com" data-senha="123456">Entrar</button></td></tr>
+      <tr><td>Professor</td><td><code>prof.rafael@example.com</code></td><td><code>123456</code></td>
+        <td><button type="button" class="sec mini usar-conta" data-email="prof.rafael@example.com" data-senha="123456">Entrar</button></td></tr>
+      </tbody>
+    </table>
+    <div class="msg" id="msg-contas"></div>
+    <p class="tag">Leitura (<span class="m get">GET</span>) é liberada para qualquer autenticado.
+      O botão <strong>Entrar</strong> faz o login e deixa o token pronto no <a href="#console">console</a>.</p>
+  </section>
 
-    <section class="card" id="rotas">
-      <h2>Rotas</h2>
+  <section class="card" id="console">
+    <h2>Console de requisições</h2>
+    <p class="tag">Faça requisições reais a esta API. Escrita
+      (<span class="m post">POST</span> <span class="m put">PUT</span> <span class="m delete">DELETE</span>)
+      altera o banco de demonstração.</p>
 
-      <p class="tag">Públicas (sem token)</p>
-      <table>
-        <tbody>
-          <tr><td><span class="m get">GET</span></td><td><code>/</code></td><td>Esta página / health check</td></tr>
-          <tr><td><span class="m post">POST</span></td><td><code>/tokens</code></td><td>Login → <code>{ token, user }</code></td></tr>
-        </tbody>
-      </table>
+    <div class="barra">
+      <span class="badge"><span class="dot" id="token-dot"></span><span id="token-info">sem token</span></span>
+      <button type="button" class="sec mini" id="btn-validar" disabled>Validar token</button>
+      <button type="button" class="sec mini" id="btn-copiar-token" disabled>Copiar token</button>
+      <button type="button" class="sec mini" id="btn-limpar-token" disabled>Limpar</button>
+    </div>
+    <div class="msg" id="msg-token"></div>
 
-      <p class="tag" style="margin-top:1rem">Recursos (com token)</p>
-      <table>
-        <thead><tr><th>Rotas</th><th>Escrita liberada para</th></tr></thead>
-        <tbody>
-          <tr><td><code>/users</code>, <code>/coordenadores</code>, <code>/cursos</code>, <code>/alunos</code></td><td>somente administrador</td></tr>
-          <tr><td><code>/disciplinas</code>, <code>/turmas</code>, <code>/professores</code></td><td>administrador e coordenador</td></tr>
-          <tr><td><code>/avaliacoes</code>, <code>/notas</code>, <code>/presencas</code></td><td>administrador e professor</td></tr>
-        </tbody>
-      </table>
-      <p class="tag">Cada recurso aceita <span class="m get">GET</span> <code>/</code>,
-        <span class="m get">GET</span> <code>/:id</code>,
-        <span class="m post">POST</span> <code>/</code>,
-        <span class="m put">PUT</span> <code>/:id</code> e
-        <span class="m delete">DELETE</span> <code>/:id</code>.</p>
+    <details>
+      <summary>Colar um token para testar</summary>
+      <div class="row" style="margin-top:.5rem">
+        <input id="token-manual" placeholder="eyJhbGciOi…" autocomplete="off" spellcheck="false">
+        <button type="button" class="sec" id="btn-usar-token">Usar</button>
+      </div>
+    </details>
 
-      <p class="tag" style="margin-top:1rem">Rotas especiais</p>
-      <table>
-        <thead><tr><th>Método</th><th>Rota</th><th>Quem</th></tr></thead>
-        <tbody>
-          <tr><td><span class="m get">GET</span></td><td><code>/alunos/:id/boletim</code></td><td>qualquer autenticado</td></tr>
-          <tr><td><span class="m get">GET</span></td><td><code>/turmas/:id/alunos</code></td><td>qualquer autenticado</td></tr>
-          <tr><td><span class="m post">POST</span></td><td><code>/turmas/:id/chamada</code></td><td>administrador e professor</td></tr>
-          <tr><td><span class="m post">POST</span></td><td><code>/avaliacoes/:id/notas/lote</code></td><td>administrador e professor</td></tr>
-        </tbody>
-      </table>
-    </section>
+    <form id="form-req" style="margin-top:1rem">
+      <div class="req-linha">
+        <select id="req-metodo" aria-label="Método">
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>DELETE</option>
+        </select>
+        <input id="req-caminho" value="/cursos" autocomplete="off" spellcheck="false" aria-label="Caminho">
+        <button type="submit" id="btn-enviar">Enviar</button>
+      </div>
+      <label class="check"><input type="checkbox" id="req-enviar-token" checked>
+        Enviar o cabeçalho <code>Authorization</code> (desmarque para ver o <code>401</code>)</label>
+      <div id="req-corpo-box" hidden style="margin-top:.75rem">
+        <label for="req-corpo">Corpo (JSON)</label>
+        <textarea id="req-corpo" rows="6" spellcheck="false"></textarea>
+      </div>
+    </form>
 
-    <section class="card" id="filtros">
-      <h2>Filtros por query string</h2>
-      <table>
-        <thead><tr><th>Rota</th><th>Query string</th></tr></thead>
-        <tbody>
-          <tr><td><code>/alunos</code></td><td><code>?turmaId=</code>, <code>?cursoId=</code></td></tr>
-          <tr><td><code>/turmas</code></td><td><code>?cursoId=</code></td></tr>
-          <tr><td><code>/disciplinas</code></td><td><code>?cursoId=</code></td></tr>
-          <tr><td><code>/professores</code></td><td><code>?disciplinaId=</code></td></tr>
-          <tr><td><code>/avaliacoes</code></td><td><code>?turmaId=</code>, <code>?disciplinaId=</code>, <code>?professorId=</code></td></tr>
-          <tr><td><code>/notas</code></td><td><code>?alunoId=</code>, <code>?avaliacaoId=</code>, <code>?turmaId=</code>, <code>?disciplinaId=</code></td></tr>
-          <tr><td><code>/presencas</code></td><td><code>?alunoId=</code>, <code>?turmaId=</code>, <code>?data=</code></td></tr>
-        </tbody>
-      </table>
-    </section>
+    <p class="tag" style="margin-top:1rem">Atalhos:</p>
+    <div class="atalhos" id="atalhos"></div>
 
-    <section class="card" id="lotes">
-      <h2>Rotas em lote (tudo ou nada)</h2>
-      <p class="tag">Roda dentro de uma transação: se algum item violar a regra,
-        <strong>nada</strong> é gravado. Chamada repetida no mesmo dia ou nota já
-        existente devolve <code>409</code>.</p>
-      <p><code>POST /turmas/{id}/chamada</code></p>
-      <pre>{ "data": "2026-10-05", "presencas": [{ "alunoId": 1, "presente": true }] }</pre>
-      <p><code>POST /avaliacoes/{id}/notas/lote</code></p>
-      <pre>{ "notas": [{ "alunoId": 1, "valor": 8.5 }] }</pre>
-    </section>
+    <div class="resp-topo">
+      <span class="m" id="resp-status">—</span>
+      <span class="tag" id="resp-tempo"></span>
+    </div>
+    <pre id="resp-corpo">A resposta aparece aqui.</pre>
+  </section>
 
-    <section class="card">
-      <h2>Erros</h2>
-      <p class="tag">Sempre no formato:</p>
-      <pre>{ "errors": ["mensagem em português"] }</pre>
-      <table>
-        <thead><tr><th>Status</th><th>Quando</th></tr></thead>
-        <tbody>
-          <tr><td><code>200</code> / <code>201</code> / <code>204</code></td><td>sucesso (POST devolve 201, DELETE devolve 204)</td></tr>
-          <tr><td><code>400</code></td><td>violação de regra de negócio ou corpo inválido</td></tr>
-          <tr><td><code>401</code></td><td>sem token, token inválido ou credenciais inválidas</td></tr>
-          <tr><td><code>403</code></td><td>perfil sem permissão para escrever</td></tr>
-          <tr><td><code>404</code></td><td>registro inexistente</td></tr>
-          <tr><td><code>409</code></td><td>e-mail duplicado, registro já existente ou vínculo impede a exclusão</td></tr>
-        </tbody>
-      </table>
-    </section>
+  <section class="card" id="rotas">
+    <h2>Rotas</h2>
 
-    <footer>
-      <p>
-        <a href="https://github.com/igordesouzabranco/collegium-api">Código no GitHub</a> ·
-        <a href="https://github.com/igordesouzabranco/collegium-api/blob/main/roteiro-insomnia.json">Roteiro do Insomnia (99 requests)</a> ·
-        <a href="https://github.com/igordesouzabranco/collegium-api/blob/main/README.md">README</a>
-      </p>
-      <p class="note">Hospedado no plano gratuito do Render — se a página demorou a carregar,
-        é porque o servidor estava dormindo por inatividade.</p>
-    </footer>
-  </main>
+    <p class="tag">Públicas (sem token)</p>
+    <table>
+      <tbody>
+      <tr><td><span class="m get">GET</span></td><td><code>/</code></td><td>Esta página / health check</td></tr>
+      <tr><td><span class="m post">POST</span></td><td><code>/tokens</code></td><td>Login → <code>{ token, user }</code></td></tr>
+      </tbody>
+    </table>
 
-  <script>
-    var dot = document.getElementById('dot');
-    var status = document.getElementById('status');
+    <p class="tag" style="margin-top:1rem">Recursos (com token)</p>
+    <table>
+      <thead><tr><th>Rotas</th><th>Escrita liberada para</th></tr></thead>
+      <tbody>
+      <tr><td><code>/users</code>, <code>/coordenadores</code>, <code>/cursos</code>, <code>/alunos</code></td><td>somente administrador</td></tr>
+      <tr><td><code>/disciplinas</code>, <code>/turmas</code>, <code>/professores</code></td><td>administrador e coordenador</td></tr>
+      <tr><td><code>/avaliacoes</code>, <code>/notas</code>, <code>/presencas</code></td><td>administrador e professor</td></tr>
+      </tbody>
+    </table>
+    <p class="tag">Cada recurso aceita <span class="m get">GET</span> <code>/</code>,
+      <span class="m get">GET</span> <code>/:id</code>,
+      <span class="m post">POST</span> <code>/</code>,
+      <span class="m put">PUT</span> <code>/:id</code> e
+      <span class="m delete">DELETE</span> <code>/:id</code>.</p>
+
+    <p class="tag" style="margin-top:1rem">Rotas especiais</p>
+    <table>
+      <thead><tr><th>Método</th><th>Rota</th><th>Quem</th></tr></thead>
+      <tbody>
+      <tr><td><span class="m get">GET</span></td><td><code>/alunos/:id/boletim</code></td><td>qualquer autenticado</td></tr>
+      <tr><td><span class="m get">GET</span></td><td><code>/turmas/:id/alunos</code></td><td>qualquer autenticado</td></tr>
+      <tr><td><span class="m post">POST</span></td><td><code>/turmas/:id/chamada</code></td><td>administrador e professor</td></tr>
+      <tr><td><span class="m post">POST</span></td><td><code>/avaliacoes/:id/notas/lote</code></td><td>administrador e professor</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card" id="filtros">
+    <h2>Filtros por query string</h2>
+    <table>
+      <thead><tr><th>Rota</th><th>Query string</th></tr></thead>
+      <tbody>
+      <tr><td><code>/alunos</code></td><td><code>?turmaId=</code>, <code>?cursoId=</code></td></tr>
+      <tr><td><code>/turmas</code></td><td><code>?cursoId=</code></td></tr>
+      <tr><td><code>/disciplinas</code></td><td><code>?cursoId=</code></td></tr>
+      <tr><td><code>/professores</code></td><td><code>?disciplinaId=</code></td></tr>
+      <tr><td><code>/avaliacoes</code></td><td><code>?turmaId=</code>, <code>?disciplinaId=</code>, <code>?professorId=</code></td></tr>
+      <tr><td><code>/notas</code></td><td><code>?alunoId=</code>, <code>?avaliacaoId=</code>, <code>?turmaId=</code>, <code>?disciplinaId=</code></td></tr>
+      <tr><td><code>/presencas</code></td><td><code>?alunoId=</code>, <code>?turmaId=</code>, <code>?data=</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card" id="lotes">
+    <h2>Rotas em lote (tudo ou nada)</h2>
+    <p class="tag">Roda dentro de uma transação: se algum item violar a regra,
+      <strong>nada</strong> é gravado. Chamada repetida no mesmo dia ou nota já
+      existente devolve <code>409</code>.</p>
+    <p><code>POST /turmas/{id}/chamada</code></p>
+    <pre>{ "data": "2026-10-05", "presencas": [{ "alunoId": 1, "presente": true }] }</pre>
+    <p><code>POST /avaliacoes/{id}/notas/lote</code></p>
+    <pre>{ "notas": [{ "alunoId": 1, "valor": 8.5 }] }</pre>
+  </section>
+
+  <section class="card">
+    <h2>Erros</h2>
+    <p class="tag">Sempre no formato:</p>
+    <pre>{ "errors": ["mensagem em português"] }</pre>
+    <table>
+      <thead><tr><th>Status</th><th>Quando</th></tr></thead>
+      <tbody>
+      <tr><td><code>200</code> / <code>201</code> / <code>204</code></td><td>sucesso (POST devolve 201, DELETE devolve 204)</td></tr>
+      <tr><td><code>400</code></td><td>violação de regra de negócio ou corpo inválido</td></tr>
+      <tr><td><code>401</code></td><td>sem token, token inválido ou credenciais inválidas</td></tr>
+      <tr><td><code>403</code></td><td>perfil sem permissão para escrever</td></tr>
+      <tr><td><code>404</code></td><td>registro inexistente</td></tr>
+      <tr><td><code>409</code></td><td>e-mail duplicado, registro já existente ou vínculo impede a exclusão</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <p>
+      <a href="https://github.com/igordesouzabranco/collegium-api">Código no GitHub</a> ·
+      <a href="https://github.com/igordesouzabranco/collegium-api/blob/main/roteiro-insomnia.json">Roteiro do Insomnia (99 requests)</a> ·
+      <a href="https://github.com/igordesouzabranco/collegium-api/blob/main/README.md">README</a>
+    </p>
+    <p class="note">Hospedado no plano gratuito do Render — se a página demorou a carregar,
+      é porque o servidor estava dormindo por inatividade.</p>
+  </footer>
+</main>
+
+<script>
+  (function () {
+    'use strict';
+
+    var CHAVE_TOKEN = 'collegium_token';
+    var ROTULOS = { administrador: 'Administrador', coordenador: 'Coordenador', professor: 'Professor' };
+    var NOMES_STATUS = {
+      200: 'OK', 201: 'Created', 204: 'No Content', 400: 'Bad Request', 401: 'Unauthorized',
+      403: 'Forbidden', 404: 'Not Found', 409: 'Conflict', 500: 'Internal Server Error'
+    };
+    // Atalhos do console: clicar preenche o formulário e já envia
+    var ATALHOS = [
+      { metodo: 'GET', caminho: '/cursos' },
+      { metodo: 'GET', caminho: '/turmas' },
+      { metodo: 'GET', caminho: '/alunos' },
+      { metodo: 'GET', caminho: '/professores' },
+      { metodo: 'GET', caminho: '/alunos?turmaId=2' },
+      { metodo: 'GET', caminho: '/alunos/1/boletim' },
+      { metodo: 'GET', caminho: '/turmas/2/alunos' },
+      {
+        metodo: 'POST', caminho: '/tokens', semToken: true,
+        corpo: '{\n  "email": "john.doe@example.com",\n  "password": "123456"\n}'
+      }
+    ];
+
+    var tokenAtual = '';
+
+    function pegar(id) { return document.getElementById(id); }
+
+    function mostrarMensagem(caixa, classe, texto) {
+      caixa.className = 'msg' + (classe ? ' ' + classe : '');
+      caixa.textContent = texto;
+    }
+
+    // ---------- Selo de status da API ----------
+    var seloPonto = pegar('dot');
+    var seloTexto = pegar('status');
+    var seloVersao = pegar('versao');
 
     fetch('/', { headers: { Accept: 'application/json' } })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
         if (d && d.status === 'ok') {
-          dot.className = 'dot on';
-          status.textContent = 'API online';
+          seloPonto.className = 'dot on';
+          seloTexto.textContent = 'API online';
+          // A versão vem da própria API (package.json), então é a que está no ar
+          seloVersao.textContent = typeof d.version === 'string' && d.version ? 'v' + d.version : 'versão ?';
         } else {
           throw new Error('resposta inesperada');
         }
       })
       .catch(function () {
-        dot.className = 'dot off';
-        status.textContent = 'API indisponível';
+        seloPonto.className = 'dot off';
+        seloTexto.textContent = 'API indisponível';
+        seloVersao.textContent = 'versão ?';
       });
 
-    var form = document.getElementById('form-login');
-    var msg = document.getElementById('msg');
-    var caixaToken = document.getElementById('token');
-    var btnCopiar = document.getElementById('btn-copiar');
-    var tokenAtual = '';
+    // ---------- Token: ler, guardar e mostrar ----------
 
-    form.addEventListener('submit', function (evento) {
-      evento.preventDefault();
-      msg.className = 'msg';
-      msg.textContent = 'enviando…';
-      caixaToken.hidden = true;
-      btnCopiar.hidden = true;
+    // O JWT tem 3 partes separadas por ponto; a do meio (payload) é JSON em base64url
+    function lerPayload(token) {
+      try {
+        var base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) { base64 += '='; }
+        var json = decodeURIComponent(atob(base64).split('').map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(json);
+      } catch (erro) {
+        return null;
+      }
+    }
 
-      fetch('/tokens', {
+    function formatarRestante(minutos) {
+      if (minutos >= 2880) { return Math.round(minutos / 1440) + ' dias'; }
+      if (minutos >= 60) { return Math.round(minutos / 60) + ' h'; }
+      return minutos + ' min';
+    }
+
+    function mostrarToken() {
+      var ponto = pegar('token-dot');
+      var info = pegar('token-info');
+      var temToken = !!tokenAtual;
+
+      pegar('btn-validar').disabled = !temToken;
+      pegar('btn-copiar-token').disabled = !temToken;
+      pegar('btn-limpar-token').disabled = !temToken;
+
+      if (!temToken) {
+        ponto.className = 'dot';
+        info.textContent = 'sem token';
+        return;
+      }
+
+      var dados = lerPayload(tokenAtual);
+      if (!dados) {
+        ponto.className = 'dot off';
+        info.textContent = 'token com formato inválido';
+        return;
+      }
+
+      var texto = (ROTULOS[dados.role] || dados.role || 'perfil desconhecido') + ' · ' + (dados.email || '?');
+      ponto.className = 'dot on';
+      if (dados.exp) {
+        var restante = Math.round((dados.exp * 1000 - Date.now()) / 60000);
+        if (restante <= 0) {
+          ponto.className = 'dot off';
+          texto += ' · expirado';
+        } else {
+          texto += ' · expira em ' + formatarRestante(restante);
+        }
+      }
+      info.textContent = texto;
+    }
+
+    function definirToken(token) {
+      tokenAtual = token || '';
+      try {
+        if (tokenAtual) { sessionStorage.setItem(CHAVE_TOKEN, tokenAtual); }
+        else { sessionStorage.removeItem(CHAVE_TOKEN); }
+      } catch (erro) { /* storage indisponível: o token vale só até recarregar */ }
+
+      // Caixa do "Testar login aqui" acompanha o token atual
+      pegar('token').textContent = tokenAtual;
+      pegar('token').hidden = !tokenAtual;
+      pegar('btn-copiar').hidden = !tokenAtual;
+      mostrarToken();
+    }
+
+    function copiarTexto(texto, botao) {
+      if (!botao.dataset.rotulo) { botao.dataset.rotulo = botao.textContent; }
+      function voltar() { setTimeout(function () { botao.textContent = botao.dataset.rotulo; }, 1500); }
+      navigator.clipboard.writeText(texto).then(function () {
+        botao.textContent = 'Copiado!';
+        voltar();
+      }).catch(function () {
+        botao.textContent = 'Não foi possível copiar';
+        voltar();
+      });
+    }
+
+    // ---------- Login (formulário e botões das contas de teste) ----------
+
+    function entrar(email, senha, caixaMsg) {
+      mostrarMensagem(caixaMsg, '', 'enviando…');
+
+      return fetch('/tokens', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: document.getElementById('email').value.trim(),
-          password: document.getElementById('senha').value,
-        }),
+        body: JSON.stringify({ email: email, password: senha })
       })
         .then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
         .then(function (r) {
           if (r.status !== 200) {
-            msg.className = 'msg err';
-            msg.textContent = (r.body.errors || ['erro'])[0];
+            mostrarMensagem(caixaMsg, 'err', (r.body.errors || ['erro'])[0]);
             return;
           }
-          tokenAtual = r.body.token;
-          msg.className = 'msg ok';
-          msg.textContent = 'Login como ' + r.body.user.role + ' — token obtido.';
-          caixaToken.textContent = tokenAtual;
-          caixaToken.hidden = false;
-          btnCopiar.hidden = false;
+          definirToken(r.body.token);
+          mostrarMensagem(caixaMsg, 'ok', 'Login como ' + r.body.user.role + ' — token obtido.');
         })
         .catch(function () {
-          msg.className = 'msg err';
-          msg.textContent = 'Falha ao falar com a API.';
+          mostrarMensagem(caixaMsg, 'err', 'Falha ao falar com a API.');
+        });
+    }
+
+    pegar('form-login').addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      entrar(pegar('email').value.trim(), pegar('senha').value, pegar('msg'));
+    });
+
+    pegar('btn-copiar').addEventListener('click', function () {
+      copiarTexto(tokenAtual, pegar('btn-copiar'));
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.usar-conta'), function (botao) {
+      botao.addEventListener('click', function () {
+        var email = botao.getAttribute('data-email');
+        var senha = botao.getAttribute('data-senha');
+        pegar('email').value = email;
+        pegar('senha').value = senha;
+        entrar(email, senha, pegar('msg-contas'));
+      });
+    });
+
+    // ---------- Console: testar o token ----------
+
+    var msgToken = pegar('msg-token');
+
+    pegar('btn-usar-token').addEventListener('click', function () {
+      var valor = pegar('token-manual').value.trim().replace(/^Bearer\s+/i, '');
+      if (!valor) {
+        mostrarMensagem(msgToken, 'err', 'Cole um token primeiro.');
+        return;
+      }
+      definirToken(valor);
+      pegar('token-manual').value = '';
+      mostrarMensagem(msgToken, '', 'Token carregado. Clique em “Validar token” para ver se a API o aceita.');
+    });
+
+    pegar('btn-validar').addEventListener('click', function () {
+      mostrarMensagem(msgToken, '', 'validando…');
+      fetch('/cursos', { headers: { Accept: 'application/json', Authorization: 'Bearer ' + tokenAtual } })
+        .then(function (r) {
+          if (r.status === 200) {
+            mostrarMensagem(msgToken, 'ok', 'A API aceitou o token (GET /cursos → 200).');
+          } else if (r.status === 401) {
+            mostrarMensagem(msgToken, 'err', 'A API recusou o token (401): inválido, expirado ou de uma conta que não existe mais.');
+          } else {
+            mostrarMensagem(msgToken, 'err', 'Resposta inesperada: ' + r.status + '.');
+          }
+        })
+        .catch(function () {
+          mostrarMensagem(msgToken, 'err', 'Falha ao falar com a API.');
         });
     });
 
-    btnCopiar.addEventListener('click', function () {
-      navigator.clipboard.writeText(tokenAtual).then(function () {
-        btnCopiar.textContent = 'Copiado!';
-        setTimeout(function () { btnCopiar.textContent = 'Copiar'; }, 1500);
-      });
+    pegar('btn-copiar-token').addEventListener('click', function () {
+      copiarTexto(tokenAtual, pegar('btn-copiar-token'));
     });
-  </script>
+
+    pegar('btn-limpar-token').addEventListener('click', function () {
+      definirToken('');
+      mostrarMensagem(msgToken, '', '');
+    });
+
+    // ---------- Console: enviar requisições ----------
+
+    var seletorMetodo = pegar('req-metodo');
+    var campoCaminho = pegar('req-caminho');
+    var campoCorpo = pegar('req-corpo');
+    var botaoEnviar = pegar('btn-enviar');
+
+    function atualizarCorpo() {
+      var temCorpo = seletorMetodo.value === 'POST' || seletorMetodo.value === 'PUT';
+      pegar('req-corpo-box').hidden = !temCorpo;
+    }
+
+    seletorMetodo.addEventListener('change', atualizarCorpo);
+    campoCorpo.placeholder = '{ "campo": "valor" }';
+
+    function mostrarResposta(status, tempo, texto) {
+      var rotulo = pegar('resp-status');
+      rotulo.textContent = status ? status + ' ' + (NOMES_STATUS[status] || '') : 'erro';
+      rotulo.className = 'm ' + (status && status < 400 ? 'ok' : 'err');
+      pegar('resp-tempo').textContent = tempo === null ? '' : tempo + ' ms';
+
+      var corpo = texto ? texto : '(sem corpo)';
+      try { corpo = JSON.stringify(JSON.parse(texto), null, 2); } catch (erro) { /* não é JSON: mostra como veio */ }
+      pegar('resp-corpo').textContent = corpo;
+    }
+
+    function mostrarErroLocal(texto) {
+      mostrarResposta(0, null, texto);
+    }
+
+    function enviar() {
+      var metodo = seletorMetodo.value;
+      var caminho = campoCaminho.value.trim();
+      if (caminho.charAt(0) !== '/') { caminho = '/' + caminho; }
+
+      // Só rotas desta mesma API: evita mandar o token para outro site
+      var destino = null;
+      try { destino = new URL(caminho, window.location.origin); } catch (erro) { /* inválido */ }
+      if (!destino || destino.origin !== window.location.origin) {
+        mostrarErroLocal('Caminho inválido: use só rotas desta API, como /cursos.');
+        return;
+      }
+      var url = destino.pathname + destino.search;
+
+      var opcoes = { method: metodo, headers: { Accept: 'application/json' } };
+
+      if (pegar('req-enviar-token').checked && tokenAtual) {
+        opcoes.headers.Authorization = 'Bearer ' + tokenAtual;
+      }
+
+      if (metodo === 'POST' || metodo === 'PUT') {
+        var corpo = campoCorpo.value.trim();
+        if (corpo) {
+          try { JSON.parse(corpo); } catch (erro) {
+            mostrarErroLocal('O corpo não é um JSON válido: ' + erro.message);
+            return;
+          }
+          opcoes.headers['Content-Type'] = 'application/json';
+          opcoes.body = corpo;
+        }
+      }
+
+      if (metodo === 'DELETE' && !window.confirm('Enviar DELETE ' + url + '? Isso apaga o registro do banco de demonstração.')) {
+        return;
+      }
+
+      botaoEnviar.disabled = true;
+      pegar('resp-status').textContent = 'enviando…';
+      pegar('resp-status').className = 'm';
+      var inicio = Date.now();
+
+      fetch(url, opcoes)
+        .then(function (r) {
+          return r.text().then(function (texto) {
+            mostrarResposta(r.status, Date.now() - inicio, texto);
+
+            // POST /tokens bem-sucedido: já deixa o token pronto para as próximas requisições
+            if (metodo === 'POST' && destino.pathname.replace(/\/+$/, '') === '/tokens' && r.status === 200) {
+              try {
+                var dados = JSON.parse(texto);
+                if (dados.token) {
+                  definirToken(dados.token);
+                  mostrarMensagem(msgToken, 'ok', 'Token da resposta carregado.');
+                }
+              } catch (erro) { /* resposta sem token: segue sem carregar */ }
+            }
+          });
+        })
+        .catch(function () {
+          mostrarErroLocal('Falha ao falar com a API (se ela estava dormindo, tente de novo em instantes).');
+        })
+        .then(function () {
+          botaoEnviar.disabled = false;
+        });
+    }
+
+    pegar('form-req').addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      enviar();
+    });
+
+    // Monta os botões de atalho
+    var caixaAtalhos = pegar('atalhos');
+    ATALHOS.forEach(function (atalho) {
+      var botao = document.createElement('button');
+      botao.type = 'button';
+      botao.className = 'sec mini';
+
+      var metodo = document.createElement('span');
+      metodo.className = 'm ' + atalho.metodo.toLowerCase();
+      metodo.textContent = atalho.metodo;
+
+      botao.appendChild(metodo);
+      botao.appendChild(document.createTextNode(' ' + atalho.caminho));
+
+      botao.addEventListener('click', function () {
+        seletorMetodo.value = atalho.metodo;
+        campoCaminho.value = atalho.caminho;
+        campoCorpo.value = atalho.corpo || '';
+        pegar('req-enviar-token').checked = !atalho.semToken;
+        atualizarCorpo();
+        enviar();
+      });
+
+      caixaAtalhos.appendChild(botao);
+    });
+
+    // ---------- Início ----------
+    atualizarCorpo();
+    try { definirToken(sessionStorage.getItem(CHAVE_TOKEN) || ''); } catch (erro) { definirToken(''); }
+    setInterval(mostrarToken, 30000); // atualiza o "expira em"
+  })();
+</script>
 </body>
 </html>

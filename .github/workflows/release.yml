@@ -1,0 +1,32 @@
+name: Release
+
+# Cria a release no GitHub quando uma tag de versão (v1.2.3) é enviada.
+# Fluxo: npm version patch|minor|major  ->  git push origin main --follow-tags
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # A versão tem uma fonte só (package.json): a tag precisa bater com ela,
+      # senão a página mostraria um número e a release outro.
+      - name: Conferir se a tag bate com o package.json
+        run: |
+          VERSAO_PACOTE="v$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$VERSAO_PACOTE" ]; then
+            echo "A tag $GITHUB_REF_NAME não bate com o package.json ($VERSAO_PACOTE)."
+            exit 1
+          fi
+
+      - name: Criar a release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes
